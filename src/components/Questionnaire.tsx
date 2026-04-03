@@ -36,19 +36,15 @@ export default function Questionnaire({
   }
 
   const saveAnswer = async (questionId: string, answer: string) => {
-    try {
-      const response = await fetch(`/api/test/${token}/answer`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questionId, answer }),
-      })
+    const response = await fetch(`/api/test/${token}/answer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ questionId, answer }),
+    })
 
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || 'Erreur lors de la sauvegarde')
-      }
-    } catch (err) {
-      throw err
+    if (!response.ok) {
+      const data = await response.json()
+      throw new Error(data.error || 'Erreur lors de la sauvegarde')
     }
   }
 
