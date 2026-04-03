@@ -101,7 +101,7 @@ export default function DashboardPage() {
                 Aucune session pour le moment
               </h2>
               <p className="text-it2p-text-secondary mb-6">
-                Créez votre première session pour commencer à utiliser l'IT2P avec vos coachés.
+                Créez votre première session pour commencer à utiliser l&apos;IT2P avec vos coachés.
               </p>
               <button
                 onClick={() => setIsModalOpen(true)}
