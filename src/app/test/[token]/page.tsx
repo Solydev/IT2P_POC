@@ -28,38 +28,37 @@ export default function TestPage() {
   const [error, setError] = useState<string>('')
   const [sessionData, setSessionData] = useState<SessionData | null>(null)
 
-  const fetchTestData = async () => {
-    try {
-      const response = await fetch(`/api/test/${token}`)
-      const data = await response.json()
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          setError('Token invalide. Veuillez vérifier le lien que vous avez reçu.')
-        } else if (response.status === 410) {
-          if (data.status === 'EXPIRED') {
-            setError('Ce test a expiré. Veuillez contacter votre praticien pour obtenir un nouveau lien.')
-          } else if (data.status === 'COMPLETED') {
-            setError('Ce test a déjà été complété. Merci pour votre participation.')
-          }
-        } else {
-          setError(data.error || 'Une erreur est survenue')
-        }
-        setState('error')
-        return
-      }
-
-      setSessionData(data)
-      setState('intro')
-    } catch (err) {
-      setError('Impossible de charger le test. Veuillez réessayer.')
-      setState('error')
-    }
-  }
-
   useEffect(() => {
+    const fetchTestData = async () => {
+      try {
+        const response = await fetch(`/api/test/${token}`)
+        const data = await response.json()
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            setError('Token invalide. Veuillez vérifier le lien que vous avez reçu.')
+          } else if (response.status === 410) {
+            if (data.status === 'EXPIRED') {
+              setError('Ce test a expiré. Veuillez contacter votre praticien pour obtenir un nouveau lien.')
+            } else if (data.status === 'COMPLETED') {
+              setError('Ce test a déjà été complété. Merci pour votre participation.')
+            }
+          } else {
+            setError(data.error || 'Une erreur est survenue')
+          }
+          setState('error')
+          return
+        }
+
+        setSessionData(data)
+        setState('intro')
+      } catch (err) {
+        setError('Impossible de charger le test. Veuillez réessayer.')
+        setState('error')
+      }
+    }
+
     fetchTestData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   const handleStart = () => {

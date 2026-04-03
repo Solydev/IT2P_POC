@@ -50,7 +50,11 @@ export async function GET(
     for (const answer of session.answers) {
       // Convert stored index (0,1,2,3) back to letter (A,B,C,D)
       const letters = ['A', 'B', 'C', 'D']
-      answersMap[answer.questionId] = letters[answer.value] || 'A'
+      if (answer.value < 0 || answer.value > 3) {
+        console.error(`Invalid answer value ${answer.value} for question ${answer.questionId}`)
+        continue
+      }
+      answersMap[answer.questionId] = letters[answer.value]
     }
 
     return Response.json({
