@@ -45,16 +45,10 @@ export async function GET(
       )
     }
 
-    // Convert answers to map: questionId -> answer letter
+    // Build answers map: question number (string) -> answer letter
     const answersMap: Record<string, string> = {}
-    for (const answer of session.answers) {
-      // Convert stored index (0,1,2,3) back to letter (A,B,C,D)
-      const letters = ['A', 'B', 'C', 'D']
-      if (answer.value < 0 || answer.value > 3) {
-        console.error(`Invalid answer value ${answer.value} for question ${answer.questionId}`)
-        continue
-      }
-      answersMap[answer.questionId] = letters[answer.value]
+    for (const ans of session.answers) {
+      answersMap[ans.question.toString()] = ans.answer
     }
 
     return Response.json({
@@ -62,7 +56,7 @@ export async function GET(
         id: session.id,
         token: session.token,
         status: session.status,
-        patientName: session.patientName,
+        coacheeName: session.coacheeName,
         expiresAt: session.expiresAt,
       },
       questions: QUESTIONS,

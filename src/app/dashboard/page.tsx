@@ -8,9 +8,8 @@ interface Session {
   id: string
   token: string
   status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'EXPIRED'
-  patientName: string | null
-  patientAge?: number | null
-  patientGender?: string | null
+  coacheeName: string | null
+  context: string | null
   createdAt: string
   expiresAt?: string | null
   completedAt?: string | null
@@ -18,7 +17,7 @@ interface Session {
     answers: number
   }
   result?: {
-    scoreTotal: number
+    profileCode: string
   } | null
 }
 

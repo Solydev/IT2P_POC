@@ -40,10 +40,10 @@ export async function GET(
       where: { id },
       include: {
         answers: {
-          orderBy: { questionId: 'asc' }
+          orderBy: { question: 'asc' },
         },
-        result: true
-      }
+        result: true,
+      },
     })
 
     // Check if session exists

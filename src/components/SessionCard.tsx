@@ -10,9 +10,8 @@ interface SessionCardProps {
     id: string
     token: string
     status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'EXPIRED'
-    patientName: string | null
-    patientAge?: number | null
-    patientGender?: string | null
+    coacheeName: string | null
+    context: string | null
     createdAt: string
     expiresAt?: string | null
     completedAt?: string | null
@@ -20,7 +19,7 @@ interface SessionCardProps {
       answers: number
     }
     result?: {
-      scoreTotal: number
+      profileCode: string
     } | null
   }
 }
@@ -45,8 +44,13 @@ export default function SessionCard({ session }: SessionCardProps) {
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-it2p-text mb-1">
-            {session.patientName || 'Sans nom'}
+            {session.coacheeName || <span className="italic text-it2p-text-secondary">Non renseigné</span>}
           </h3>
+          {session.context && (
+            <p className="text-sm text-it2p-text-secondary">
+              {session.context}
+            </p>
+          )}
           <p className="text-sm text-it2p-text-secondary">
             Créé le {formatDate(session.createdAt)}
           </p>
@@ -55,11 +59,6 @@ export default function SessionCard({ session }: SessionCardProps) {
       </div>
 
       <div className="space-y-2 mb-4">
-        {session.patientAge && (
-          <p className="text-sm text-it2p-text-secondary">
-            <span className="font-medium">Âge:</span> {session.patientAge} ans
-          </p>
-        )}
         {session.expiresAt && session.status !== 'EXPIRED' && session.status !== 'COMPLETED' && (
           <p className="text-sm text-it2p-text-secondary">
             <span className="font-medium">Expire le:</span> {formatDate(session.expiresAt)}
@@ -70,14 +69,14 @@ export default function SessionCard({ session }: SessionCardProps) {
             <span className="font-medium">Complété le:</span> {formatDate(session.completedAt)}
           </p>
         )}
-        {session._count && session._count.answers > 0 && (
+        {session._count && session._count.answers > 0 && session.status === 'IN_PROGRESS' && (
           <p className="text-sm text-it2p-text-secondary">
-            <span className="font-medium">Réponses:</span> {session._count.answers}/40
+            <span className="font-medium">Réponses:</span> {session._count.answers}/14
           </p>
         )}
         {session.result && (
           <p className="text-sm text-it2p-text-secondary">
-            <span className="font-medium">Score total:</span> {session.result.scoreTotal}
+            <span className="font-medium">Profil:</span> {session.result.profileCode}
           </p>
         )}
       </div>

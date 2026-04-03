@@ -14,7 +14,8 @@ export default function SessionCreateModal({
   onClose,
   onSessionCreated,
 }: SessionCreateModalProps) {
-  const [patientName, setPatientName] = useState('')
+  const [coacheeName, setCoacheeName] = useState('')
+  const [context, setContext] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [createdLink, setCreatedLink] = useState('')
@@ -28,7 +29,7 @@ export default function SessionCreateModal({
       const response = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ patientName }),
+        body: JSON.stringify({ coacheeName, context }),
       })
 
       const data = await response.json()
@@ -47,7 +48,8 @@ export default function SessionCreateModal({
   }
 
   const handleClose = () => {
-    setPatientName('')
+    setCoacheeName('')
+    setContext('')
     setError('')
     setCreatedLink('')
     onClose()
@@ -66,17 +68,32 @@ export default function SessionCreateModal({
           {!createdLink ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="patientName" className="block text-sm font-medium text-it2p-text mb-1">
-                  Nom du coaché *
+                <label htmlFor="coacheeName" className="block text-sm font-medium text-it2p-text mb-1">
+                  Nom du coaché
+                  <span className="text-it2p-text-secondary font-normal ml-1">(optionnel)</span>
                 </label>
                 <input
-                  id="patientName"
+                  id="coacheeName"
                   type="text"
-                  value={patientName}
-                  onChange={(e) => setPatientName(e.target.value)}
+                  value={coacheeName}
+                  onChange={(e) => setCoacheeName(e.target.value)}
                   className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
-                  placeholder="Jean Dupont"
-                  required
+                  placeholder="Ex: Marie Dupont"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="context" className="block text-sm font-medium text-it2p-text mb-1">
+                  Contexte
+                  <span className="text-it2p-text-secondary font-normal ml-1">(optionnel)</span>
+                </label>
+                <input
+                  id="context"
+                  type="text"
+                  value={context}
+                  onChange={(e) => setContext(e.target.value)}
+                  className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                  placeholder="Ex: Recrutement, Accompagnement managérial"
                 />
               </div>
 

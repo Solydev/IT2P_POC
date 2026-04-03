@@ -8,20 +8,33 @@ export async function POST(
   try {
     const { token } = params
     const body = await request.json()
-    const { questionId, answer } = body
+    const { question, answer } = body
 
-    // Validate input
-    if (!questionId || !answer) {
+    // Validate input presence
+    if (!question || !answer) {
       return Response.json(
-        { error: 'questionId et answer sont requis' },
+        { error: 'question et answer sont requis' },
         { status: 400 }
       )
     }
 
-    // Validate answer is A, B, C, or D
-    if (!['A', 'B', 'C', 'D'].includes(answer)) {
+    // Validate question number (1–14)
+    const questionNum = parseInt(question.toString(), 10)
+    if (isNaN(questionNum) || questionNum < 1 || questionNum > 14) {
       return Response.json(
-        { error: 'La réponse doit être A, B, C ou D' },
+        { error: 'Numéro de question invalide (1–14)' },
+        { status: 400 }
+      )
+    }
+
+    // Questions 12 and 13 only have options A/B
+    const binaryQuestions = [12, 13]
+    const validOptions = binaryQuestions.includes(questionNum)
+      ? ['A', 'B']
+      : ['A', 'B', 'C', 'D']
+    if (!validOptions.includes(answer)) {
+      return Response.json(
+        { error: `Réponse invalide pour la question ${questionNum}` },
         { status: 400 }
       )
     }
@@ -54,24 +67,19 @@ export async function POST(
       )
     }
 
-    // Convert letter (A,B,C,D) to index (0,1,2,3) for storage
-    const answerIndex = ['A', 'B', 'C', 'D'].indexOf(answer)
-
-    // Upsert answer
+    // Upsert answer (store letter directly)
     await prisma.answer.upsert({
       where: {
-        sessionId_questionId: {
+        sessionId_question: {
           sessionId: session.id,
-          questionId: questionId.toString(),
+          question: questionNum,
         },
       },
-      update: {
-        value: answerIndex,
-      },
+      update: { answer },
       create: {
         sessionId: session.id,
-        questionId: questionId.toString(),
-        value: answerIndex,
+        question: questionNum,
+        answer,
       },
     })
 

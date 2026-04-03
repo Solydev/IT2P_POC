@@ -12,7 +12,7 @@ model Practitioner {
   email        String    @unique
   passwordHash String
   name         String
-  institution  String?
+  company      String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   sessions     Session[]
@@ -23,10 +23,9 @@ model Session {
   token          String   @unique
   practitionerId String
   practitioner   Practitioner @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
-  status         String   // PENDING, COMPLETED, EXPIRED
-  patientName    String?
-  patientAge     Int?
-  patientGender  String?
+  status         String   @default("PENDING") // PENDING | IN_PROGRESS | COMPLETED | EXPIRED
+  coacheeName    String?
+  context        String?
   expiresAt      DateTime?
   completedAt    DateTime?
   createdAt      DateTime @default(now())
@@ -36,27 +35,28 @@ model Session {
 }
 
 model Answer {
-  id         String   @id @default(uuid())
-  sessionId  String
-  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  questionId String
-  value      Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question  Int
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@unique([sessionId, questionId])
+  @@unique([sessionId, question])
 }
 
 model Result {
-  id                 String   @id @default(uuid())
-  sessionId          String   @unique
-  session            Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  scoreIntrapersonnel Int
-  scoreInterpersonnel Int
-  scoreIdentitaire   Int
-  scoreEnvironnemental Int
-  scoreTotal         Int
-  interpretation     String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id             String   @id @default(uuid())
+  sessionId      String   @unique
+  session        Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  scoreF         Int
+  scoreR         Int
+  scoreP         Int
+  scoreM         Int
+  profileCode    String
+  profileName    String
+  profileVariant String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

@@ -7,7 +7,6 @@ config()
 
 const prisma = new PrismaClient()
 
-// Simple password hashing (for demo purposes)
 function hashPassword(password: string): string {
   return createHash('sha256').update(password).digest('hex')
 }
@@ -23,99 +22,117 @@ async function main() {
 
   console.log('✅ Cleaned existing data')
 
-  // Create practitioner
+  // Create practitioner (credentials match .env.example)
   const practitioner = await prisma.practitioner.create({
     data: {
       email: 'demo@solydev.fr',
       passwordHash: hashPassword('demo2026'),
-      name: 'S. Dunet',
-      institution: 'Institut IA2P',
+      name: 'S. Dunet (Démo)',
+      company: 'Institut IA2P',
     },
   })
 
   console.log('✅ Created practitioner:', practitioner.email)
 
-  // Create COMPLETED session with answers and result
+  // ────────────────────────────────────────────────────────────────────────────
+  // COMPLETED session — real 14-question A2P answers, pre-computed scores
+  //
+  // Réponses choisies pour Jean Dupont :
+  //   Q1:C  Q2:B  Q3:D  Q4:A  Q5:C  Q6:D  Q7:A  Q8:C
+  //   Q9:D  Q10:B Q11:C Q12:A Q13:A Q14:A
+  //
+  // Vérification manuelle (grille mock README §5.1) :
+  //   SOC (1,2,3,4,6,8,12)  : Q1:C→M, Q2:B→P, Q3:D→R, Q4:A→F, Q6:D→F,
+  //                            Q8:C→F, Q12:A→[R,P]  → F=3 R=2 P=2 M=1
+  //   PSY (5,7,9,10,11,13,14): Q5:C→[R,M], Q7:A→M, Q9:D→M, Q10:B→M,
+  //                            Q11:C→R, Q13:A→[F,P], Q14:A→F  → F=2 R=2 P=1 M=4
+  //   Total : F=5  R=4  P=3  M=5   profileCode: F5R4P3M5
+  // ────────────────────────────────────────────────────────────────────────────
+  const demoAnswers: { question: number; answer: string }[] = [
+    { question: 1,  answer: 'C' },
+    { question: 2,  answer: 'B' },
+    { question: 3,  answer: 'D' },
+    { question: 4,  answer: 'A' },
+    { question: 5,  answer: 'C' },
+    { question: 6,  answer: 'D' },
+    { question: 7,  answer: 'A' },
+    { question: 8,  answer: 'C' },
+    { question: 9,  answer: 'D' },
+    { question: 10, answer: 'B' },
+    { question: 11, answer: 'C' },
+    { question: 12, answer: 'A' },
+    { question: 13, answer: 'A' },
+    { question: 14, answer: 'A' },
+  ]
+
   const completedSession = await prisma.session.create({
     data: {
       token: 'completed-demo-token-123',
       practitionerId: practitioner.id,
       status: 'COMPLETED',
-      patientName: 'Jean Dupont',
-      patientAge: 45,
-      patientGender: 'M',
+      coacheeName: 'Jean Dupont',
+      context: 'Accompagnement Managérial',
       completedAt: new Date('2026-04-01T10:30:00Z'),
       expiresAt: new Date('2026-04-15T23:59:59Z'),
     },
   })
 
-  // Create sample answers for the completed session (40 questions with values 1-5)
-  const answers = []
-  for (let i = 1; i <= 40; i++) {
-    answers.push({
-      sessionId: completedSession.id,
-      questionId: `q${i}`,
-      value: Math.floor(Math.random() * 5) + 1, // Random value 1-5
-    })
-  }
-
   await prisma.answer.createMany({
-    data: answers,
+    data: demoAnswers.map(a => ({ sessionId: completedSession.id, ...a })),
   })
 
-  // Create result for completed session
   await prisma.result.create({
     data: {
       sessionId: completedSession.id,
-      scoreIntrapersonnel: 42,
-      scoreInterpersonnel: 38,
-      scoreIdentitaire: 35,
-      scoreEnvironnemental: 40,
-      scoreTotal: 155,
-      interpretation: 'Profil équilibré avec une légère dominante intrapersonnelle',
+      scoreF: 5,
+      scoreR: 4,
+      scoreP: 3,
+      scoreM: 5,
+      profileCode: 'F5R4P3M5',
+      profileName: 'PROFIL DE DÉMONSTRATION',
+      profileVariant: 'Algorithme prototype — la grille officielle IA2P sera intégrée en production',
     },
   })
 
-  console.log('✅ Created COMPLETED session with answers and result')
+  console.log('✅ Created COMPLETED session (Jean Dupont, F5R4P3M5)')
 
-  // Create PENDING session (waiting for patient to complete)
-  const pendingSession = await prisma.session.create({
+  // PENDING session — link ready to share
+  await prisma.session.create({
     data: {
       token: 'pending-demo-token-456',
       practitionerId: practitioner.id,
       status: 'PENDING',
-      patientName: 'Marie Martin',
-      patientAge: 32,
-      patientGender: 'F',
-      expiresAt: new Date('2026-04-10T23:59:59Z'),
+      coacheeName: 'Marie Martin',
+      context: 'Recrutement KEOPS',
+      expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000), // expires in 48 h
     },
   })
 
-  console.log('✅ Created PENDING session')
+  console.log('✅ Created PENDING session (Marie Martin)')
 
-  // Create EXPIRED session
-  const expiredSession = await prisma.session.create({
+  // EXPIRED session
+  await prisma.session.create({
     data: {
       token: 'expired-demo-token-789',
       practitionerId: practitioner.id,
       status: 'EXPIRED',
-      patientName: 'Pierre Dubois',
-      patientAge: 58,
-      patientGender: 'M',
+      coacheeName: 'Pierre Dubois',
+      context: 'Bilan de compétences',
       expiresAt: new Date('2026-03-25T23:59:59Z'),
     },
   })
 
-  console.log('✅ Created EXPIRED session')
+  console.log('✅ Created EXPIRED session (Pierre Dubois)')
 
-  console.log('🎉 Seed completed successfully!')
   console.log(`
-📊 Summary:
-  - 1 Practitioner: ${practitioner.email}
-  - 3 Sessions:
-    • COMPLETED: ${completedSession.token} (with 40 answers + result)
-    • PENDING: ${pendingSession.token}
-    • EXPIRED: ${expiredSession.token}
+🎉 Seed terminé !
+
+📊 Résumé :
+  - Praticien  : demo@solydev.fr  /  demo2026
+  - Sessions   :
+      • COMPLETED  completed-demo-token-123  (Jean Dupont — F5 R4 P3 M5)
+      • PENDING    pending-demo-token-456    (Marie Martin — lien valide 48 h)
+      • EXPIRED    expired-demo-token-789    (Pierre Dubois)
   `)
 }
 

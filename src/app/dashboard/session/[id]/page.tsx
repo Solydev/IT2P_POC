@@ -12,17 +12,6 @@ interface PageProps {
 
 type SessionStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'EXPIRED'
 
-function getGenderLabel(gender: string): string {
-  switch (gender) {
-    case 'M':
-      return 'Masculin'
-    case 'F':
-      return 'Féminin'
-    default:
-      return 'Autre'
-  }
-}
-
 export default async function SessionPage({ params }: PageProps) {
   // Check authentication
   const session = await getSession()
@@ -47,10 +36,10 @@ export default async function SessionPage({ params }: PageProps) {
     where: { id },
     include: {
       answers: {
-        orderBy: { questionId: 'asc' }
+        orderBy: { question: 'asc' },
       },
-      result: true
-    }
+      result: true,
+    },
   })
 
   // Check if session exists
@@ -87,19 +76,12 @@ export default async function SessionPage({ params }: PageProps) {
 
   const result = sessionData.result
 
-  // Map database fields to F/R/P/M scores
-  // Based on the Result model schema:
-  // scoreIntrapersonnel -> F (Internal/Personal focus)
-  // scoreInterpersonnel -> R (Relational/Social focus)
-  // scoreIdentitaire -> P (Position/Identity focus)
-  // scoreEnvironnemental -> M (Material/Environmental focus)
-  // Note: The French names suggest these mappings, but official axis definitions
-  // are pending from Institut IA2P. Labels below are placeholders.
+  // Map database fields to F/R/P/M scores (per spec §3)
   const scores = {
-    F: result.scoreIntrapersonnel,
-    R: result.scoreInterpersonnel,
-    P: result.scoreIdentitaire,
-    M: result.scoreEnvironnemental,
+    F: result.scoreF,
+    R: result.scoreR,
+    P: result.scoreP,
+    M: result.scoreM,
   }
 
   // Format date for display
@@ -114,10 +96,10 @@ export default async function SessionPage({ params }: PageProps) {
   // Prepare metadata for RoueA2P
   const metadata = {
     date: formatDate(sessionData.createdAt),
-    analysedFor: 'Bilan A2P',
-    coacheeName: sessionData.patientName || undefined,
-    profileCode: `F${scores.F}R${scores.R}P${scores.P}M${scores.M}`,
-    profileName: result.interpretation || 'PROFIL DE DÉMONSTRATION',
+    analysedFor: sessionData.context || 'Bilan A2P',
+    coacheeName: sessionData.coacheeName || undefined,
+    profileCode: result.profileCode,
+    profileName: result.profileName,
     resultCode: `F${scores.F} R${scores.R} P${scores.P} M${scores.M}`,
   }
 
@@ -157,22 +139,14 @@ export default async function SessionPage({ params }: PageProps) {
           <div>
             <span className="font-medium text-it2p-text">Coaché(e):</span>
             <span className="ml-2 text-it2p-text-secondary">
-              {sessionData.patientName || 'Non renseigné'}
+              {sessionData.coacheeName || 'Non renseigné'}
             </span>
           </div>
-          {sessionData.patientAge && (
+          {sessionData.context && (
             <div>
-              <span className="font-medium text-it2p-text">Âge:</span>
+              <span className="font-medium text-it2p-text">Contexte:</span>
               <span className="ml-2 text-it2p-text-secondary">
-                {sessionData.patientAge} ans
-              </span>
-            </div>
-          )}
-          {sessionData.patientGender && (
-            <div>
-              <span className="font-medium text-it2p-text">Genre:</span>
-              <span className="ml-2 text-it2p-text-secondary">
-                {getGenderLabel(sessionData.patientGender)}
+                {sessionData.context}
               </span>
             </div>
           )}
@@ -234,7 +208,7 @@ export default async function SessionPage({ params }: PageProps) {
                 Score total
               </div>
               <div className="text-3xl font-bold text-it2p-text">
-                {result.scoreTotal}
+                {scores.F + scores.R + scores.P + scores.M}
               </div>
             </div>
           </div>

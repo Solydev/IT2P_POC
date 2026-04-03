@@ -13,7 +13,7 @@ interface SessionData {
     id: string
     token: string
     status: string
-    patientName: string | null
+    coacheeName: string | null
     expiresAt: string | null
   }
   questions: Question[]
@@ -132,9 +132,9 @@ export default function TestPage() {
               <h1 className="text-3xl md:text-4xl font-serif font-bold text-it2p-text mb-3">
                 {INTRO_TEXT.title}
               </h1>
-              {sessionData.session.patientName && (
+              {sessionData.session.coacheeName && (
                 <p className="text-it2p-text-secondary text-lg">
-                  Bienvenue, {sessionData.session.patientName}
+                  Bienvenue, {sessionData.session.coacheeName}
                 </p>
               )}
             </div>

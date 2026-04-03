@@ -35,11 +35,11 @@ export default function Questionnaire({
     setError(null)
   }
 
-  const saveAnswer = async (questionId: string, answer: string) => {
+  const saveAnswer = async (questionNumber: number, answer: string) => {
     const response = await fetch(`/api/test/${token}/answer`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ questionId, answer }),
+      body: JSON.stringify({ question: questionNumber, answer }),
     })
 
     if (!response.ok) {
@@ -59,7 +59,7 @@ export default function Questionnaire({
 
     try {
       // Save the answer
-      await saveAnswer(currentQuestion.number.toString(), currentAnswer)
+      await saveAnswer(currentQuestion.number, currentAnswer)
 
       if (isLastQuestion) {
         // Complete the test

@@ -799,7 +799,7 @@ Créer un script `prisma/seed.ts` qui :
 ```typescript
 {
   email: "demo@solydev.fr",
-  name: "Dr. Dunet (Démo)",
+  name: "S. Dunet (Démo)",
   company: "Institut IA2P"
 }
 ```
@@ -841,7 +841,7 @@ Créer un script `prisma/seed.ts` qui :
 DATABASE_URL="file:./data/it2p.db"
 PRACTITIONER_EMAIL="demo@solydev.fr"
 PRACTITIONER_PASSWORD="demo2026"
-PRACTITIONER_NAME="Dr. Dunet (Démo)"
+PRACTITIONER_NAME="S. Dunet (Démo)"
 SESSION_SECRET="[random-32-char-string]"
 NEXT_PUBLIC_APP_URL="https://[lightsail-domain]"
 ```

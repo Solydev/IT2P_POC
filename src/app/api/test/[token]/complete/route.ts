@@ -53,18 +53,8 @@ export async function POST(
 
     // Convert answers to format expected by scoring function
     const answersMap: Record<number, string> = {}
-    const letters = ['A', 'B', 'C', 'D']
-    
-    for (const answer of session.answers) {
-      if (answer.value < 0 || answer.value > 3) {
-        console.error(`Invalid answer value ${answer.value} for question ${answer.questionId}`)
-        return Response.json(
-          { error: 'Données invalides détectées' },
-          { status: 500 }
-        )
-      }
-      const questionNum = parseInt(answer.questionId)
-      answersMap[questionNum] = letters[answer.value]
+    for (const ans of session.answers) {
+      answersMap[ans.question] = ans.answer
     }
 
     // Compute scores
@@ -74,12 +64,13 @@ export async function POST(
     await prisma.result.create({
       data: {
         sessionId: session.id,
-        scoreIntrapersonnel: result.totalScores.F,
-        scoreInterpersonnel: result.totalScores.R,
-        scoreIdentitaire: result.totalScores.P,
-        scoreEnvironnemental: result.totalScores.M,
-        scoreTotal: result.totalScores.F + result.totalScores.R + result.totalScores.P + result.totalScores.M,
-        interpretation: `${result.profileCode} - ${result.profileName}`,
+        scoreF: result.totalScores.F,
+        scoreR: result.totalScores.R,
+        scoreP: result.totalScores.P,
+        scoreM: result.totalScores.M,
+        profileCode: result.profileCode,
+        profileName: result.profileName,
+        profileVariant: result.profileVariant,
       },
     })
 

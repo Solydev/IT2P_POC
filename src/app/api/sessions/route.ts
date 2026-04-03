@@ -35,14 +35,24 @@ export async function GET() {
       where: { practitionerId: practitioner.id },
       orderBy: { createdAt: 'desc' },
       include: {
-        _count: {
-          select: { answers: true }
-        },
-        result: true
-      }
+        _count: { select: { answers: true } },
+        result: true,
+      },
     })
 
-    return NextResponse.json({ sessions })
+    // Normalize expired sessions (status may still be PENDING/IN_PROGRESS in DB)
+    const now = new Date()
+    const normalizedSessions = sessions.map(s => ({
+      ...s,
+      status:
+        (s.status === 'PENDING' || s.status === 'IN_PROGRESS') &&
+        s.expiresAt &&
+        s.expiresAt < now
+          ? 'EXPIRED'
+          : s.status,
+    }))
+
+    return NextResponse.json({ sessions: normalizedSessions })
   } catch (error) {
     console.error('Error fetching sessions:', error)
     return NextResponse.json(
@@ -81,28 +91,21 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json()
-    const { patientName } = body
-
-    // Validate input
-    if (!patientName || !patientName.trim()) {
-      return NextResponse.json(
-        { error: 'Le nom du coaché est requis' },
-        { status: 400 }
-      )
-    }
+    const { coacheeName, context } = body
 
     // Generate unique token and set expiration to 48h from now
     const token = uuidv4()
     const expiresAt = new Date()
     expiresAt.setHours(expiresAt.getHours() + 48)
 
-    // Create session
+    // Create session (coacheeName and context are both optional)
     const newSession = await prisma.session.create({
       data: {
         token,
         practitionerId: practitioner.id,
         status: 'PENDING',
-        patientName: patientName.trim(),
+        coacheeName: coacheeName?.trim() || null,
+        context: context?.trim() || null,
         expiresAt,
       },
     })
