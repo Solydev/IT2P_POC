@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --color-bg: #FAFAF7;
+  --color-surface: #FFFFFF;
+  --color-sand: #D4C5A9;
+  --color-sand-light: #F5EBD8;
+  --color-text: #2D2A26;
+  --color-text-secondary: #6B6560;
+  --color-accent: #2E5A88;
+  --color-accent-hover: #1D4A75;
+  --color-coming-soon: #C8C4BE;
+  --color-success: #4A7C59;
+  --color-warning: #B8860B;
+  --color-error: #A04040;
+  --color-info: #4A6FA5;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+}
