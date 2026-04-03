@@ -88,11 +88,13 @@ export default async function SessionPage({ params }: PageProps) {
   const result = sessionData.result
 
   // Map database fields to F/R/P/M scores
-  // Based on the Result model:
-  // scoreIntrapersonnel -> F (Flexibility/Personal)
-  // scoreInterpersonnel -> R (Relationship)
-  // scoreIdentitaire -> P (Position/Identity)
-  // scoreEnvironnemental -> M (Matter/Environment)
+  // Based on the Result model schema:
+  // scoreIntrapersonnel -> F (Internal/Personal focus)
+  // scoreInterpersonnel -> R (Relational/Social focus)
+  // scoreIdentitaire -> P (Position/Identity focus)
+  // scoreEnvironnemental -> M (Material/Environmental focus)
+  // Note: The French names suggest these mappings, but official axis definitions
+  // are pending from Institut IA2P. Labels below are placeholders.
   const scores = {
     F: result.scoreIntrapersonnel,
     R: result.scoreInterpersonnel,

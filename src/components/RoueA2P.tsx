@@ -51,9 +51,9 @@ export default function RoueA2P({ scores, metadata }: RoueA2PProps) {
   
   // Octagon corner points
   // The octagon cuts the corners at 45° angles
-  // Corner points are at about sqrt(2) * 13 / 2 ≈ 9.19 units from center
+  // Corner distance: 9.19 ≈ 13/√2 (for 45° corner cuts on a square grid)
   const cornerDist = 13 * GRID_STEP
-  const cornerCut = 9.19 * GRID_STEP // Distance to corner on diagonal
+  const cornerCut = 9.19 * GRID_STEP
   
   const octagonPoints = [
     // Top edge
