@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json()
-    const { patientName, patientContext } = body
+    const { patientName } = body
 
     // Validate input
     if (!patientName || !patientName.trim()) {
