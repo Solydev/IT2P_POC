@@ -15,7 +15,7 @@ interface RoueA2PProps {
     profileName: string    // "ADAPTATIF ET POLYVALENT"
     resultCode: string     // "F5 R4 P6 M5"
   }
-  // Coming Soon — toggle désactivé dans l'UI
+  // Future enhancement: Soc/Psy analysis toggle (not yet implemented)
   showSocPsy?: boolean
   socScores?: { F: number; R: number; P: number; M: number }
   psyScores?: { F: number; R: number; P: number; M: number }

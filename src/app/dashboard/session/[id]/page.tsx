@@ -10,6 +10,19 @@ interface PageProps {
   params: Promise<{ id: string }>
 }
 
+type SessionStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'EXPIRED'
+
+function getGenderLabel(gender: string): string {
+  switch (gender) {
+    case 'M':
+      return 'Masculin'
+    case 'F':
+      return 'Féminin'
+    default:
+      return 'Autre'
+  }
+}
+
 export default async function SessionPage({ params }: PageProps) {
   // Check authentication
   const session = await getSession()
@@ -135,7 +148,7 @@ export default async function SessionPage({ params }: PageProps) {
               )}
             </p>
           </div>
-          <StatusBadge status={sessionData.status as any} />
+          <StatusBadge status={sessionData.status as SessionStatus} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -157,7 +170,7 @@ export default async function SessionPage({ params }: PageProps) {
             <div>
               <span className="font-medium text-it2p-text">Genre:</span>
               <span className="ml-2 text-it2p-text-secondary">
-                {sessionData.patientGender === 'M' ? 'Masculin' : sessionData.patientGender === 'F' ? 'Féminin' : 'Autre'}
+                {getGenderLabel(sessionData.patientGender)}
               </span>
             </div>
           )}
