@@ -9,6 +9,20 @@
 
 ---
 
+
+**Launch commands**
+
+npm install              # Install dependencies
+npm run db:generate      # Generate Prisma client
+cp .env.example .env     # Create environment file
+npm run db:migrate       # Create database and run migrations (includes seeding)
+npm run dev              # Starting locally
+
+---
+
+
+
+
 ## 1. Objectif du prototype
 
 Démontrer en conditions réelles le parcours cœur de l'outil IT2P en ligne :  
