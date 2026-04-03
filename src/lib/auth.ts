@@ -33,7 +33,20 @@ export async function signToken(payload: Omit<SessionPayload, 'expiresAt'>): Pro
 export async function verifyToken(token: string): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, getSecretKey())
-    return payload as SessionPayload
+    // Validate payload has required fields
+    if (
+      payload &&
+      typeof payload.email === 'string' &&
+      typeof payload.name === 'string' &&
+      typeof payload.expiresAt === 'number'
+    ) {
+      return {
+        email: payload.email,
+        name: payload.name,
+        expiresAt: payload.expiresAt,
+      }
+    }
+    return null
   } catch (error) {
     console.error('Token verification failed:', error)
     return null
