@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import StatusBadge from './StatusBadge'
 import CopyLinkButton from './CopyLinkButton'
+import { getAppUrl } from '@/lib/config'
 
 interface SessionCardProps {
   session: {
@@ -25,7 +26,7 @@ interface SessionCardProps {
 }
 
 export default function SessionCard({ session }: SessionCardProps) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const appUrl = getAppUrl()
   const testLink = `${appUrl}/test/${session.token}`
   
   const formatDate = (dateStr: string) => {

@@ -15,7 +15,6 @@ export default function SessionCreateModal({
   onSessionCreated,
 }: SessionCreateModalProps) {
   const [patientName, setPatientName] = useState('')
-  const [patientContext, setPatientContext] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [createdLink, setCreatedLink] = useState('')
@@ -29,7 +28,7 @@ export default function SessionCreateModal({
       const response = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ patientName, patientContext }),
+        body: JSON.stringify({ patientName }),
       })
 
       const data = await response.json()
@@ -49,7 +48,6 @@ export default function SessionCreateModal({
 
   const handleClose = () => {
     setPatientName('')
-    setPatientContext('')
     setError('')
     setCreatedLink('')
     onClose()
@@ -79,20 +77,6 @@ export default function SessionCreateModal({
                   className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
                   placeholder="Jean Dupont"
                   required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="patientContext" className="block text-sm font-medium text-it2p-text mb-1">
-                  Contexte (optionnel)
-                </label>
-                <textarea
-                  id="patientContext"
-                  value={patientContext}
-                  onChange={(e) => setPatientContext(e.target.value)}
-                  className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent resize-none"
-                  placeholder="Notes sur le contexte de la session..."
-                  rows={3}
                 />
               </div>
 
