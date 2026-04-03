@@ -127,20 +127,19 @@ export default function RoueA2P({ scores, metadata }: RoueA2PProps) {
       
       {/* Metadata Table */}
       <g transform="translate(20, 55)">
-        <text fontSize="10" fill="#2D2A26">
-          <tspan x="0" dy="0">Date: {metadata.date}</tspan>
-          <tspan x="120" dy="0">Analysé pour: {metadata.analysedFor}</tspan>
-        </text>
-        <text fontSize="10" fill="#2D2A26">
-          <tspan x="0" dy="12">Résultat: {metadata.resultCode}</tspan>
-          {metadata.coacheeName && (
-            <tspan x="120" dy="0">Coaché(e): {metadata.coacheeName}</tspan>
-          )}
-        </text>
-        <text fontSize="10" fill="#2D2A26">
-          <tspan x="0" dy="12">Profil: {metadata.profileCode}</tspan>
-          <tspan x="120" dy="0">Type: {metadata.profileName}</tspan>
-        </text>
+        {/* Row 1 */}
+        <text x="0" y="0" fontSize="10" fill="#2D2A26">Date: {metadata.date}</text>
+        <text x="200" y="0" fontSize="10" fill="#2D2A26">Analysé pour: {metadata.analysedFor}</text>
+        
+        {/* Row 2 */}
+        <text x="0" y="12" fontSize="10" fill="#2D2A26">Résultat: {metadata.resultCode}</text>
+        {metadata.coacheeName && (
+          <text x="200" y="12" fontSize="10" fill="#2D2A26">Coaché(e): {metadata.coacheeName}</text>
+        )}
+        
+        {/* Row 3 */}
+        <text x="0" y="24" fontSize="10" fill="#2D2A26">Profil: {metadata.profileCode}</text>
+        <text x="200" y="24" fontSize="10" fill="#2D2A26">Type: {metadata.profileName}</text>
       </g>
       
       {/* Main Chart Background */}
