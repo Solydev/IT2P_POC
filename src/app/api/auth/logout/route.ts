@@ -1,3 +1,15 @@
+import { NextResponse } from 'next/server'
+import { clearSessionCookie } from '@/lib/auth'
+
 export async function POST() {
-  return Response.json({ todo: true })
+  try {
+    await clearSessionCookie()
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Logout error:', error)
+    return NextResponse.json(
+      { error: 'Erreur lors de la déconnexion' },
+      { status: 500 }
+    )
+  }
 }
