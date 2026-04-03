@@ -76,6 +76,9 @@ export function computeScores(answers: Record<number, string>): FullResult {
   // Profil simplifié pour le proto
   const profileCode = `F${totalScores.F}R${totalScores.R}P${totalScores.P}M${totalScores.M}`;
 
+  // NOTE: profileName and profileVariant are placeholder values for the prototype.
+  // These will be replaced with actual profile determination logic when the
+  // official IA2P scoring grid and profile mapping are provided by Institut IA2P.
   return {
     socScores,
     psyScores,
