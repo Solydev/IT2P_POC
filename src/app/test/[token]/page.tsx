@@ -28,10 +28,6 @@ export default function TestPage() {
   const [error, setError] = useState<string>('')
   const [sessionData, setSessionData] = useState<SessionData | null>(null)
 
-  useEffect(() => {
-    fetchTestData()
-  }, [token])
-
   const fetchTestData = async () => {
     try {
       const response = await fetch(`/api/test/${token}`)
@@ -60,6 +56,11 @@ export default function TestPage() {
       setState('error')
     }
   }
+
+  useEffect(() => {
+    fetchTestData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token])
 
   const handleStart = () => {
     setState('questionnaire')
@@ -226,7 +227,7 @@ export default function TestPage() {
             Test Complété !
           </h2>
           <p className="text-it2p-text-secondary mb-6">
-            Merci d'avoir complété le test A2P. Vos réponses ont été enregistrées avec succès.
+            Merci d&apos;avoir complété le test A2P. Vos réponses ont été enregistrées avec succès.
           </p>
           <p className="text-sm text-it2p-text-secondary">
             Votre praticien analysera vos résultats et vous contactera prochainement pour discuter de votre profil professionnel.
