@@ -124,7 +124,7 @@ export default function DashboardLayoutClient({
       {/* Main content */}
       <main className="flex-1 overflow-auto">
         {/* Mobile header with hamburger */}
-        <div className="lg:hidden sticky top-0 z-30 bg-it2p-surface border-b border-it2p-sand/30 px-4 py-3 flex items-center justify-between">
+        <div className="lg:hidden sticky top-0 z-30 bg-it2p-surface border-b border-it2p-sand/30 px-4 py-3 flex items-center">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="p-2 rounded-lg hover:bg-it2p-sand-light transition-colors"
@@ -134,8 +134,7 @@ export default function DashboardLayoutClient({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <h1 className="text-xl font-serif font-bold text-it2p-accent">IT2P</h1>
-          <div className="w-10" /> {/* Spacer for centering */}
+          <h1 className="text-xl font-serif font-bold text-it2p-accent absolute left-1/2 -translate-x-1/2">IT2P</h1>
         </div>
         
         {children}
