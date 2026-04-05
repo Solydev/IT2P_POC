@@ -35,27 +35,49 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const filter = searchParams.get('filter') || 'active'
 
+    const base = { practitionerId: practitioner.id }
+
     // Build where clause based on filter
-    const whereClause: any = { practitionerId: practitioner.id }
+    let whereClause: any = { ...base }
     if (filter === 'active') {
       whereClause.isActive = true
     } else if (filter === 'inactive') {
       whereClause.isActive = false
+    } else if (filter === 'with-active-session') {
+      whereClause.sessions = {
+        some: { status: { in: ['PENDING', 'IN_PROGRESS'] } },
+      }
     }
-    // 'all' doesn't add isActive filter
+    // 'all' doesn't add extra filter
 
-    // Get all persons for this practitioner with session count
-    const persons = await prisma.person.findMany({
-      where: whereClause,
-      include: {
-        _count: {
-          select: { sessions: true },
-        },
+    // Fetch filtered persons + global counts in parallel
+    const [persons, countAll, countActive, countInactive, countWithActiveSession] =
+      await Promise.all([
+        prisma.person.findMany({
+          where: whereClause,
+          include: { _count: { select: { sessions: true } } },
+          orderBy: { createdAt: 'desc' },
+        }),
+        prisma.person.count({ where: base }),
+        prisma.person.count({ where: { ...base, isActive: true } }),
+        prisma.person.count({ where: { ...base, isActive: false } }),
+        prisma.person.count({
+          where: {
+            ...base,
+            sessions: { some: { status: { in: ['PENDING', 'IN_PROGRESS'] } } },
+          },
+        }),
+      ])
+
+    return NextResponse.json({
+      persons,
+      counts: {
+        all: countAll,
+        active: countActive,
+        inactive: countInactive,
+        withActiveSession: countWithActiveSession,
       },
-      orderBy: { createdAt: 'desc' },
     })
-
-    return NextResponse.json({ persons })
   } catch (error) {
     console.error('Error fetching persons:', error)
     return NextResponse.json(
