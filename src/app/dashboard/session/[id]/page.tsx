@@ -31,7 +31,7 @@ export default async function SessionPage({ params }: PageProps) {
   // Get session ID
   const { id } = await params
 
-  // Get session with answers and result
+  // Get session with answers, result, and person
   const sessionData = await prisma.session.findUnique({
     where: { id },
     include: {
@@ -39,6 +39,7 @@ export default async function SessionPage({ params }: PageProps) {
         orderBy: { question: 'asc' },
       },
       result: true,
+      person: true,
     },
   })
 
@@ -97,7 +98,9 @@ export default async function SessionPage({ params }: PageProps) {
   const metadata = {
     date: formatDate(sessionData.createdAt),
     analysedFor: sessionData.context || 'Bilan A2P',
-    coacheeName: sessionData.coacheeName || undefined,
+    coacheeName: sessionData.person
+      ? `${sessionData.person.firstName} ${sessionData.person.lastName}`
+      : sessionData.coacheeName || undefined,
     profileCode: result.profileCode,
     profileName: result.profileName,
     resultCode: `F${scores.F} R${scores.R} P${scores.P} M${scores.M}`,
@@ -137,9 +140,11 @@ export default async function SessionPage({ params }: PageProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div>
-            <span className="font-medium text-it2p-text">Coaché(e):</span>
+            <span className="font-medium text-it2p-text">Coaché(e) :</span>
             <span className="ml-2 text-it2p-text-secondary">
-              {sessionData.coacheeName || 'Non renseigné'}
+              {sessionData.person
+                ? `${sessionData.person.firstName} ${sessionData.person.lastName}`
+                : sessionData.coacheeName || 'Non renseigné'}
             </span>
           </div>
           {sessionData.context && (
@@ -168,7 +173,7 @@ export default async function SessionPage({ params }: PageProps) {
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
                 <div className="text-sm font-medium text-it2p-text-secondary mb-1">
-                  F - Flexibility
+                  F — Réflexion
                 </div>
                 <div className="text-3xl font-bold text-it2p-accent">
                   {scores.F}
@@ -177,7 +182,7 @@ export default async function SessionPage({ params }: PageProps) {
 
               <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
                 <div className="text-sm font-medium text-it2p-text-secondary mb-1">
-                  R - Relationship
+                  R — Rigueur
                 </div>
                 <div className="text-3xl font-bold text-it2p-accent">
                   {scores.R}
@@ -186,7 +191,7 @@ export default async function SessionPage({ params }: PageProps) {
 
               <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
                 <div className="text-sm font-medium text-it2p-text-secondary mb-1">
-                  P - Position
+                  P — Implication personnelle
                 </div>
                 <div className="text-3xl font-bold text-it2p-accent">
                   {scores.P}
@@ -195,7 +200,7 @@ export default async function SessionPage({ params }: PageProps) {
 
               <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
                 <div className="text-sm font-medium text-it2p-text-secondary mb-1">
-                  M - Matter
+                  M — Efficacité concrète
                 </div>
                 <div className="text-3xl font-bold text-it2p-accent">
                   {scores.M}
