@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json()
-    const { personId, coacheeName, context } = body
+    const { personId, context } = body
 
     // Validate required fields
     if (!personId) {
@@ -141,7 +141,6 @@ export async function POST(request: NextRequest) {
         practitionerId: practitioner.id,
         personId: personId,
         status: 'PENDING',
-        coacheeName: coacheeName?.trim() || null,
         context: context.trim(),
         expiresAt,
       },

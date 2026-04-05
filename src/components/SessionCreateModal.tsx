@@ -24,7 +24,6 @@ export default function SessionCreateModal({
   onSessionCreated,
 }: SessionCreateModalProps) {
   const [personId, setPersonId] = useState('')
-  const [coacheeName, setCoacheeName] = useState('')
   const [context, setContext] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -128,7 +127,7 @@ export default function SessionCreateModal({
       const response = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personId, coacheeName, context }),
+        body: JSON.stringify({ personId, context }),
       })
 
       const data = await response.json()
@@ -162,7 +161,6 @@ export default function SessionCreateModal({
 
   const handleClose = () => {
     setPersonId('')
-    setCoacheeName('')
     setContext('')
     setError('')
     setShowNewPersonForm(false)
@@ -300,21 +298,6 @@ export default function SessionCreateModal({
                 className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
                 placeholder="Ex: Recrutement, Accompagnement managérial"
                 required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="coacheeName" className="block text-sm font-medium text-it2p-text mb-1">
-                Nom du coaché
-                <span className="text-it2p-text-secondary font-normal ml-1">(optionnel)</span>
-              </label>
-              <input
-                id="coacheeName"
-                type="text"
-                value={coacheeName}
-                onChange={(e) => setCoacheeName(e.target.value)}
-                className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
-                placeholder="Ex: Marie Dupont"
               />
             </div>
 

@@ -16,7 +16,6 @@ interface SessionEditModalProps {
   session: {
     id: string
     personId: string
-    coacheeName: string | null
     context: string
   }
 }
@@ -28,7 +27,6 @@ export default function SessionEditModal({
   session,
 }: SessionEditModalProps) {
   const [personId, setPersonId] = useState(session.personId)
-  const [coacheeName, setCoacheeName] = useState(session.coacheeName || '')
   const [context, setContext] = useState(session.context)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -81,7 +79,7 @@ export default function SessionEditModal({
       const response = await fetch(`/api/sessions/${session.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personId, coacheeName, context }),
+        body: JSON.stringify({ personId, context }),
       })
 
       const data = await response.json()
@@ -101,7 +99,6 @@ export default function SessionEditModal({
 
   const handleClose = () => {
     setPersonId(session.personId)
-    setCoacheeName(session.coacheeName || '')
     setContext(session.context)
     setError('')
     onClose()
@@ -120,7 +117,7 @@ export default function SessionEditModal({
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="personId" className="block text-sm font-medium text-it2p-text mb-1">
-                Personne <span className="text-it2p-error">*</span>
+                Coaché <span className="text-it2p-error">*</span>
               </label>
               {loadingPersons ? (
                 <div className="w-full px-3 py-2 border border-it2p-sand/50 rounded bg-gray-50 text-it2p-text-secondary">
@@ -138,7 +135,7 @@ export default function SessionEditModal({
                   className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
                   required
                 >
-                  <option value="">Sélectionnez une personne</option>
+                  <option value="">Sélectionnez un coaché</option>
                   {persons.map((person) => (
                     <option key={person.id} value={person.id}>
                       {person.firstName} {person.lastName}
@@ -161,21 +158,6 @@ export default function SessionEditModal({
                 className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
                 placeholder="Ex: Recrutement, Accompagnement managérial"
                 required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="coacheeName" className="block text-sm font-medium text-it2p-text mb-1">
-                Nom du coaché
-                <span className="text-it2p-text-secondary font-normal ml-1">(optionnel)</span>
-              </label>
-              <input
-                id="coacheeName"
-                type="text"
-                value={coacheeName}
-                onChange={(e) => setCoacheeName(e.target.value)}
-                className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
-                placeholder="Ex: Marie Dupont"
               />
             </div>
 

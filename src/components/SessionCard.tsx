@@ -12,8 +12,12 @@ interface SessionCardProps {
     id: string
     token: string
     personId: string
+    person?: {
+      firstName: string
+      lastName: string
+      email: string | null
+    }
     status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'EXPIRED'
-    coacheeName: string | null
     context: string
     createdAt: string
     expiresAt?: string | null
@@ -69,7 +73,9 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
     }
   }
 
-  const displayName = session.coacheeName || <span className="italic text-it2p-text-secondary">Non renseigné</span>
+  const displayName = session.person 
+    ? `${session.person.firstName} ${session.person.lastName}`
+    : <span className="italic text-it2p-text-secondary">Non renseigné</span>
   const displayContext = session.context || <span className="italic text-it2p-text-secondary">Aucune description</span>
 
   return (

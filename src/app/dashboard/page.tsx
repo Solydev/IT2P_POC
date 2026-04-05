@@ -8,8 +8,12 @@ interface Session {
   id: string
   token: string
   personId: string
+  person?: {
+    firstName: string
+    lastName: string
+    email: string | null
+  }
   status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'EXPIRED'
-  coacheeName: string | null
   context: string
   createdAt: string
   expiresAt?: string | null

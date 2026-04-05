@@ -143,7 +143,7 @@ export async function DELETE(
 
 /**
  * PATCH /api/sessions/[id]
- * Update session metadata (coacheeName, context)
+ * Update session metadata (personId, context)
  */
 export async function PATCH(
   request: NextRequest,
@@ -197,7 +197,7 @@ export async function PATCH(
 
     // Get update data from request body
     const body = await request.json()
-    const { coacheeName, context, personId } = body
+    const { context, personId } = body
 
     // Validate required field
     if (!context || !context.trim()) {
@@ -233,7 +233,6 @@ export async function PATCH(
       where: { id },
       data: {
         ...(personId && { personId }),
-        coacheeName: coacheeName?.trim() || null,
         context: context.trim(),
       },
       include: {
