@@ -1,6 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+interface Person {
+  id: string
+  firstName: string
+  lastName: string
+  email: string | null
+}
 
 interface SessionEditModalProps {
   isOpen: boolean
@@ -8,8 +15,9 @@ interface SessionEditModalProps {
   onSessionUpdated: () => void
   session: {
     id: string
+    personId: string
     coacheeName: string | null
-    context: string | null
+    context: string
   }
 }
 
@@ -19,21 +27,61 @@ export default function SessionEditModal({
   onSessionUpdated,
   session,
 }: SessionEditModalProps) {
+  const [personId, setPersonId] = useState(session.personId)
   const [coacheeName, setCoacheeName] = useState(session.coacheeName || '')
-  const [context, setContext] = useState(session.context || '')
+  const [context, setContext] = useState(session.context)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [persons, setPersons] = useState<Person[]>([])
+  const [loadingPersons, setLoadingPersons] = useState(false)
+
+  // Fetch persons when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      fetchPersons()
+    }
+  }, [isOpen])
+
+  const fetchPersons = async () => {
+    setLoadingPersons(true)
+    try {
+      const response = await fetch('/api/persons')
+      const data = await response.json()
+      
+      if (response.ok) {
+        setPersons(data.persons || [])
+      } else {
+        console.error('Failed to fetch persons:', data.error)
+      }
+    } catch (err) {
+      console.error('Error fetching persons:', err)
+    } finally {
+      setLoadingPersons(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    // Client-side validation
+    if (!personId) {
+      setError('Veuillez sélectionner une personne')
+      return
+    }
+
+    if (!context.trim()) {
+      setError('La description est obligatoire')
+      return
+    }
+
     setLoading(true)
 
     try {
       const response = await fetch(`/api/sessions/${session.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coacheeName, context }),
+        body: JSON.stringify({ personId, coacheeName, context }),
       })
 
       const data = await response.json()
@@ -52,8 +100,9 @@ export default function SessionEditModal({
   }
 
   const handleClose = () => {
+    setPersonId(session.personId)
     setCoacheeName(session.coacheeName || '')
-    setContext(session.context || '')
+    setContext(session.context)
     setError('')
     onClose()
   }
@@ -70,6 +119,52 @@ export default function SessionEditModal({
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
+              <label htmlFor="personId" className="block text-sm font-medium text-it2p-text mb-1">
+                Personne <span className="text-it2p-error">*</span>
+              </label>
+              {loadingPersons ? (
+                <div className="w-full px-3 py-2 border border-it2p-sand/50 rounded bg-gray-50 text-it2p-text-secondary">
+                  Chargement...
+                </div>
+              ) : persons.length === 0 ? (
+                <div className="w-full px-3 py-2 border border-it2p-sand/50 rounded bg-gray-50 text-it2p-text-secondary">
+                  Aucune personne disponible
+                </div>
+              ) : (
+                <select
+                  id="personId"
+                  value={personId}
+                  onChange={(e) => setPersonId(e.target.value)}
+                  className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                  required
+                >
+                  <option value="">Sélectionnez une personne</option>
+                  {persons.map((person) => (
+                    <option key={person.id} value={person.id}>
+                      {person.firstName} {person.lastName}
+                      {person.email && ` (${person.email})`}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="context" className="block text-sm font-medium text-it2p-text mb-1">
+                Description <span className="text-it2p-error">*</span>
+              </label>
+              <input
+                id="context"
+                type="text"
+                value={context}
+                onChange={(e) => setContext(e.target.value)}
+                className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                placeholder="Ex: Recrutement, Accompagnement managérial"
+                required
+              />
+            </div>
+
+            <div>
               <label htmlFor="coacheeName" className="block text-sm font-medium text-it2p-text mb-1">
                 Nom du coaché
                 <span className="text-it2p-text-secondary font-normal ml-1">(optionnel)</span>
@@ -81,21 +176,6 @@ export default function SessionEditModal({
                 onChange={(e) => setCoacheeName(e.target.value)}
                 className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
                 placeholder="Ex: Marie Dupont"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="context" className="block text-sm font-medium text-it2p-text mb-1">
-                Contexte
-                <span className="text-it2p-text-secondary font-normal ml-1">(optionnel)</span>
-              </label>
-              <input
-                id="context"
-                type="text"
-                value={context}
-                onChange={(e) => setContext(e.target.value)}
-                className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
-                placeholder="Ex: Recrutement, Accompagnement managérial"
               />
             </div>
 
@@ -117,7 +197,7 @@ export default function SessionEditModal({
               <button
                 type="submit"
                 className="px-4 py-2 text-sm font-medium bg-it2p-accent text-white rounded hover:bg-it2p-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={loading}
+                disabled={loading || loadingPersons || persons.length === 0}
               >
                 {loading ? 'Enregistrement...' : 'Enregistrer'}
               </button>
