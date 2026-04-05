@@ -7,19 +7,19 @@ interface StatusBadgeProps {
 const statusConfig = {
   PENDING: {
     label: 'En attente',
-    className: 'bg-it2p-warning/10 text-it2p-warning border-it2p-warning/20',
+    className: 'bg-a2p-warning/10 text-a2p-warning border-a2p-warning/20',
   },
   IN_PROGRESS: {
     label: 'En cours',
-    className: 'bg-it2p-info/10 text-it2p-info border-it2p-info/20',
+    className: 'bg-a2p-info/10 text-a2p-info border-a2p-info/20',
   },
   COMPLETED: {
     label: 'Terminé',
-    className: 'bg-it2p-success/10 text-it2p-success border-it2p-success/20',
+    className: 'bg-a2p-success/10 text-a2p-success border-a2p-success/20',
   },
   EXPIRED: {
     label: 'Expiré',
-    className: 'bg-it2p-error/10 text-it2p-error border-it2p-error/20',
+    className: 'bg-a2p-error/10 text-a2p-error border-a2p-error/20',
   },
 }
 

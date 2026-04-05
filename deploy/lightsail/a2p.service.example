@@ -1,11 +1,11 @@
 [Unit]
-Description=IT2P Next.js application
+Description=A2P Next.js application
 After=network.target
 
 [Service]
 Type=simple
 User=ubuntu
-WorkingDirectory=/var/www/it2p
+WorkingDirectory=/var/www/a2p
 Environment=NODE_ENV=production
 Environment=PORT=3000
 Environment=HOSTNAME=127.0.0.1

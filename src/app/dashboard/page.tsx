@@ -69,7 +69,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="text-it2p-text-secondary">Chargement...</div>
+        <div className="text-a2p-text-secondary">Chargement...</div>
       </div>
     )
   }
@@ -77,7 +77,7 @@ export default function DashboardPage() {
   if (error) {
     return (
       <div className="p-8">
-        <div className="bg-it2p-error/10 border border-it2p-error/20 text-it2p-error px-4 py-3 rounded">
+        <div className="bg-a2p-error/10 border border-a2p-error/20 text-a2p-error px-4 py-3 rounded">
           {error}
         </div>
       </div>
@@ -90,16 +90,16 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <div className="flex-1">
-            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-it2p-text mb-2">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-a2p-text mb-2">
               Mes sessions
             </h1>
-            <p className="text-sm sm:text-base text-it2p-text-secondary">
+            <p className="text-sm sm:text-base text-a2p-text-secondary">
               Gérez vos sessions et suivez les résultats de vos coachés
             </p>
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-it2p-accent text-white font-medium rounded-lg hover:bg-it2p-accent-hover transition-colors shadow-sm whitespace-nowrap self-start sm:self-auto"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-a2p-accent text-white font-medium rounded-lg hover:bg-a2p-accent-hover transition-colors shadow-sm whitespace-nowrap self-start sm:self-auto"
           >
             + Nouvelle session
           </button>
@@ -107,17 +107,17 @@ export default function DashboardPage() {
 
         {/* Sessions list */}
         {sessions.length === 0 ? (
-          <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-6 sm:p-8 lg:p-12 text-center">
+          <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-6 sm:p-8 lg:p-12 text-center">
             <div className="max-w-md mx-auto">
-              <h2 className="text-lg sm:text-xl font-serif font-bold text-it2p-text mb-3">
+              <h2 className="text-lg sm:text-xl font-serif font-bold text-a2p-text mb-3">
                 Aucune session pour le moment
               </h2>
-              <p className="text-sm sm:text-base text-it2p-text-secondary mb-6">
-                Créez votre première session pour commencer à utiliser l&apos;IT2P avec vos coachés.
+              <p className="text-sm sm:text-base text-a2p-text-secondary mb-6">
+                Créez votre première session pour commencer à utiliser l&apos;A2P avec vos coachés.
               </p>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-it2p-accent text-white font-medium rounded-lg hover:bg-it2p-accent-hover transition-colors"
+                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-a2p-accent text-white font-medium rounded-lg hover:bg-a2p-accent-hover transition-colors"
               >
                 Créer ma première session
               </button>
