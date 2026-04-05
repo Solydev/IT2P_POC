@@ -16,6 +16,19 @@ model Practitioner {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   sessions     Session[]
+  persons      Person[]
+}
+
+model Person {
+  id             String       @id @default(uuid())
+  practitionerId String
+  practitioner   Practitioner @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
+  firstName      String
+  lastName       String
+  email          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  sessions       Session[]
 }
 
 model Session {
@@ -23,8 +36,10 @@ model Session {
   token          String   @unique
   practitionerId String
   practitioner   Practitioner @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
+  personId       String?
+  person         Person?  @relation(fields: [personId], references: [id], onDelete: SetNull)
   status         String   @default("PENDING") // PENDING | IN_PROGRESS | COMPLETED | EXPIRED
-  coacheeName    String?
+  coacheeName    String?  // Deprecated: kept for backward compatibility
   context        String?
   expiresAt      DateTime?
   completedAt    DateTime?
