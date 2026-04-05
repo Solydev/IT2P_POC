@@ -60,55 +60,85 @@ datasource db {
 }
 
 model Practitioner {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  company   String?
-  logo      String?  // URL du logo pour personnalisation — Coming Soon
-  sessions  Session[]
-  createdAt DateTime @default(now())
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String    // SHA-256 du mot de passe
+  name         String
+  company      String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sessions     Session[]
+  persons      Person[]
+}
+
+model Person {
+  id             String       @id @default(uuid())
+  practitionerId String
+  practitioner   Practitioner @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
+  firstName      String
+  lastName       String
+  email          String?
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  sessions       Session[]
 }
 
 model Session {
-  id             String        @id @default(uuid())
-  practitioner   Practitioner  @relation(fields: [practitionerId], references: [id])
+  id             String       @id @default(uuid())
+  token          String       @unique // Token du lien éphémère
   practitionerId String
-  token          String        @unique // Token du lien éphémère
-  coacheeName    String?       // Optionnel, renseigné par le praticien
-  context        String?       // Ex: "Recrutement KEOPS", "Accompagnement Managérial"
-  status         String        @default("PENDING") // PENDING | IN_PROGRESS | COMPLETED | EXPIRED
-  expiresAt      DateTime      // Expiration du lien (48h par défaut)
+  practitioner   Practitioner @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
+  personId       String
+  person         Person       @relation(fields: [personId], references: [id], onDelete: Restrict)
+  status         String       @default("PENDING") // PENDING | IN_PROGRESS | COMPLETED | EXPIRED
+  coacheeName    String?      // Déprécié — conservé pour compatibilité ascendante
+  context        String       // Obligatoire — Ex: "Recrutement KEOPS", "Accompagnement Managérial"
+  expiresAt      DateTime?    // Expiration du lien (optionnel)
+  completedAt    DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   answers        Answer[]
   result         Result?
-  createdAt      DateTime      @default(now())
-  completedAt    DateTime?
 }
 
 model Answer {
-  id        String  @id @default(uuid())
-  session   Session @relation(fields: [sessionId], references: [id])
+  id        String   @id @default(uuid())
   sessionId String
-  question  Int     // Numéro de question (1-14)
-  answer    String  // Lettre choisie (A, B, C, D)
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question  Int      // Numéro de question (1-14)
+  answer    String   // Lettre choisie (A, B, C, D)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([sessionId, question])
 }
 
 model Result {
-  id             String  @id @default(uuid())
-  session        Session @relation(fields: [sessionId], references: [id])
-  sessionId      String  @unique
-  scoreF         Int     // Score axe F (Cérébralité / Réflexion)
-  scoreR         Int     // Score axe R (Rigueur)
-  scoreP         Int     // Score axe P (Implication personnelle)
-  scoreM         Int     // Score axe M (Efficacité concrète)
-  profileCode    String  // Ex: "FR0PM0"
-  profileName    String  // Ex: "ADAPTATIF ET POLYVALENT"
-  profileVariant String? // Ex: "POLYVALENT TENDANCE ANIMATEUR"
+  id             String   @id @default(uuid())
+  sessionId      String   @unique
+  session        Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  scoreF         Int      // Score axe F (Cérébralité / Réflexion)
+  scoreR         Int      // Score axe R (Rigueur)
+  scoreP         Int      // Score axe P (Implication personnelle)
+  scoreM         Int      // Score axe M (Efficacité concrète)
+  profileCode    String   // Ex: "F5R4P3M5"
+  profileName    String   // Ex: "PROFIL DE DÉMONSTRATION"
+  profileVariant String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 ```
 
 Note : SQLite ne supporte pas les enums Prisma, on utilise des String pour `status`.
+
+**Évolutions par rapport au spec initial :**
+- Ajout du modèle `Person` : les coachés sont des entités propres, réutilisables entre sessions.
+- `Session.personId` remplace `coacheeName` (désormais obligatoire).
+- `Session.context` est maintenant obligatoire.
+- `Session.expiresAt` est optionnel (non fixé à 48h par défaut côté schema).
+- `Practitioner.passwordHash` : le mot de passe est haché en SHA-256 en base.
+- Timestamps `updatedAt` ajoutés sur tous les modèles.
 
 ---
 
@@ -580,34 +610,45 @@ interface RoueA2PProps {
 
 ### 7.2 Dashboard Praticien (`/dashboard`)
 
-**Layout** : sidebar gauche + contenu principal
+**Layout** : sidebar gauche + contenu principal (responsive — hamburger sur mobile)
 
 **Sidebar** :
-- Logo Solydev ou IT2P
-- Lien actif : "Mes passations" (le seul fonctionnel)
+- Logo IT2P + sous-titre "Inventaire du Travail en 2 Pôles"
+- Liens actifs :
+  - "Mes sessions" (`/dashboard`)
+  - "Gestion des coachés" (`/dashboard/persons`)
 - Liens Coming Soon (grisés + badge) :
-  - "Mon abonnement" 
+  - "Mon abonnement"
   - "Personnalisation"
   - "Bilans collectifs"
   - "Administration IA2P"
 - En bas : nom du praticien + bouton déconnexion
 
 **Contenu principal — Liste des sessions** :
-- Titre : "Mes passations"
-- Bouton "Nouvelle passation" (couleur accent bleu)
-- Tableau ou liste de cards avec colonnes :
-  - Coaché (nom ou "Non renseigné")
+- Titre : "Mes sessions"
+- Bouton "Nouvelle session" (couleur accent bleu)
+- Cards de sessions avec :
+  - Nom du coaché (prénom + nom via la relation `Person`)
   - Contexte
   - Date de création
   - Statut (badge couleur : jaune=En attente, bleu=En cours, vert=Terminé, gris=Expiré)
-  - Actions : "Copier le lien" (si pending/in_progress), "Voir résultat" (si completed)
-- Si aucune session : message d'onboarding "Créez votre première passation"
+  - Actions : "Copier le lien" (si pending/in_progress), "Voir résultat" (si completed), modifier, supprimer
+- Si aucune session : message d'onboarding "Créez votre première session"
 
-**Modal/page de création de session** :
-- Champ : Nom du coaché (optionnel, placeholder "Ex: Marie Dupont")
-- Champ : Contexte (optionnel, placeholder "Ex: Recrutement, Accompagnement managérial")
-- Bouton "Créer la passation"
-- Résultat : affiche le lien `https://[domain]/test/[token]` avec bouton copier
+**Modal de création de session** :
+- Champ : Sélection d'un coaché existant (liste des `Person` actifs) **OU** création inline d'une nouvelle personne
+- Champ : Contexte (obligatoire, placeholder "Ex: Recrutement, Accompagnement managérial")
+- Bouton "Créer la session"
+- Résultat : affiche le lien `https://[domain]/test/[token]` avec bouton copier + fermeture automatique avec toast de confirmation
+
+### 7.2b Gestion des coachés (`/dashboard/persons`)
+
+- Liste des `Person` du praticien avec filtre Actifs / Inactifs / Tous
+- Mode sélection multiple pour désactivation en lot
+- Actions par coaché : modifier (prénom, nom, email), désactiver/réactiver
+- Modal de création : prénom (obligatoire), nom (obligatoire), email (optionnel)
+- Modal d'édition : mêmes champs
+- Compteur de sessions associées par personne
 
 ### 7.3 Vue Résultat (`/dashboard/session/[id]`)
 
@@ -663,7 +704,8 @@ interface RoueA2PProps {
 ```typescript
 // Body: { email: string, password: string }
 // Compare avec les variables d'env PRACTITIONER_EMAIL et PRACTITIONER_PASSWORD
-// Si OK : crée un cookie de session (signé, httpOnly) + retourne { success: true, practitioner: { id, name, email } }
+// Si OK : crée un JWT signé (jose, HS256, durée 7 jours) dans un cookie httpOnly
+//         + retourne { success: true, practitioner: { id, name, email } }
 // Si KO : retourne 401 { error: "Identifiants incorrects" }
 ```
 
@@ -673,7 +715,51 @@ interface RoueA2PProps {
 // Retourne { success: true }
 ```
 
-### 8.2 Sessions (authentifié)
+### 8.2 Personnes / Coachés (authentifié)
+
+**`GET /api/persons`**
+```typescript
+// Retourne la liste des Person du praticien connecté
+// Query param optionnel : ?isActive=true|false (défaut : tous)
+// Inclut le compteur de sessions associées (_count.sessions)
+// Response: { persons: Person[] }
+```
+
+**`POST /api/persons`**
+```typescript
+// Body: { firstName: string, lastName: string, email?: string }
+// Crée une nouvelle personne liée au praticien connecté
+// Response: { person: Person }
+```
+
+**`GET /api/persons/[id]`**
+```typescript
+// Retourne le détail d'une Person (vérification d'appartenance au praticien)
+// Response: Person
+```
+
+**`PATCH /api/persons/[id]`**
+```typescript
+// Body: Partial<{ firstName, lastName, email, isActive }>
+// Met à jour les champs fournis
+// Response: { person: Person }
+```
+
+**`DELETE /api/persons/[id]`**
+```typescript
+// Supprime la Person si elle n'a aucune session liée
+// Sinon : retourne 409 { error: "Cette personne a des sessions associées" }
+// Response: { success: true }
+```
+
+**`POST /api/persons/bulk-deactivate`**
+```typescript
+// Body: { personIds: string[] }
+// Désactive (isActive = false) toutes les Person listées appartenant au praticien
+// Response: { updated: number }
+```
+
+### 8.3 Sessions (authentifié)
 
 **`GET /api/sessions`**
 ```typescript
@@ -701,7 +787,7 @@ interface RoueA2PProps {
 // Response: Session (avec answers: Answer[], result: Result | null)
 ```
 
-### 8.3 Passation (publique)
+### 8.4 Passation (publique)
 
 **`GET /api/test/[token]`**
 ```typescript
@@ -793,21 +879,27 @@ interface ComingSoonProps {
 
 ## 10. Seed de la base de données
 
-Créer un script `prisma/seed.ts` qui :
+Le script `prisma/seed.ts` :
 
 1. Crée le praticien de démo :
 ```typescript
 {
   email: "demo@solydev.fr",
+  passwordHash: sha256("demo2026"),
   name: "S. Dunet (Démo)",
   company: "Institut IA2P"
 }
 ```
 
-2. Crée 2-3 sessions d'exemple avec des statuts variés pour que le dashboard ne soit pas vide :
-- 1 session COMPLETED avec des réponses et un résultat calculé (pour montrer la roue)
-- 1 session PENDING (pour montrer un lien en attente)
-- 1 session EXPIRED (pour montrer le statut expiré)
+2. Crée 3 coachés (`Person`) :
+- Jean Dupont (jean.dupont@example.com)
+- Marie Martin (marie.martin@example.com)
+- Pierre Dubois (sans email)
+
+3. Crée 3 sessions avec des statuts variés :
+- 1 session COMPLETED (Jean Dupont, contexte "Accompagnement Managérial") — 14 réponses réelles + résultat F5 R4 P3 M5
+- 1 session PENDING (Marie Martin, contexte "Recrutement KEOPS") — lien valide 48 h
+- 1 session EXPIRED (Pierre Dubois, contexte "Bilan de compétences") — date d'expiration passée
 
 ---
 
@@ -887,8 +979,11 @@ it2p-prototype/
 │   ├── schema.prisma
 │   ├── seed.ts
 │   └── migrations/
-├── public/
-│   └── fonts/          # Si nécessaire pour les fonts
+├── deploy/
+│   └── lightsail/
+│       ├── README.md
+│       ├── nginx.conf.example
+│       └── it2p.service.example
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx              # Layout racine + Google Fonts + Tailwind
@@ -897,8 +992,11 @@ it2p-prototype/
 │   │   ├── login/
 │   │   │   └── page.tsx            # Page de login
 │   │   ├── dashboard/
-│   │   │   ├── layout.tsx          # Layout avec sidebar
+│   │   │   ├── layout.tsx          # Layout serveur (récupère la session)
+│   │   │   ├── layout-client.tsx   # Layout client (sidebar responsive + ToastProvider)
 │   │   │   ├── page.tsx            # Liste des sessions
+│   │   │   ├── persons/
+│   │   │   │   └── page.tsx        # Gestion des coachés (Person)
 │   │   │   └── session/
 │   │   │       └── [id]/
 │   │   │           └── page.tsx    # Détail session + résultat + roue
@@ -909,10 +1007,16 @@ it2p-prototype/
 │   │       ├── auth/
 │   │       │   ├── login/route.ts
 │   │       │   └── logout/route.ts
+│   │       ├── persons/
+│   │       │   ├── route.ts            # GET list + POST create
+│   │       │   ├── [id]/
+│   │       │   │   └── route.ts        # GET detail + PATCH update + DELETE
+│   │       │   └── bulk-deactivate/
+│   │       │       └── route.ts        # POST désactivation en lot
 │   │       ├── sessions/
-│   │       │   ├── route.ts        # GET list + POST create
+│   │       │   ├── route.ts            # GET list + POST create
 │   │       │   └── [id]/
-│   │       │       └── route.ts    # GET detail
+│   │       │       └── route.ts        # GET detail + PATCH update + DELETE
 │   │       └── test/
 │   │           └── [token]/
 │   │               ├── route.ts        # GET validate token
@@ -925,24 +1029,33 @@ it2p-prototype/
 │   │   ├── Questionnaire.tsx       # Composant questionnaire step-by-step
 │   │   ├── QuestionCard.tsx        # Affichage d'une question + options
 │   │   ├── SessionCard.tsx         # Card session dans le dashboard
-│   │   ├── SessionCreateModal.tsx  # Modal de création de session
+│   │   ├── SessionCreateModal.tsx  # Modal de création de session (avec sélection Person)
+│   │   ├── SessionEditModal.tsx    # Modal de modification de session
+│   │   ├── PersonCard.tsx          # Card coaché dans la page Gestion des coachés
+│   │   ├── PersonCreateModal.tsx   # Modal de création d'une Person
+│   │   ├── PersonEditModal.tsx     # Modal d'édition d'une Person
 │   │   ├── ComingSoon.tsx          # Badge/overlay Coming Soon
 │   │   ├── StatusBadge.tsx         # Badge de statut (couleur selon état)
 │   │   ├── LexiqueTooltip.tsx      # Tooltip/panneau pour le lexique
 │   │   ├── ProgressBar.tsx         # Barre de progression du questionnaire
-│   │   └── CopyLinkButton.tsx      # Bouton copier le lien avec feedback
+│   │   ├── CopyLinkButton.tsx      # Bouton copier le lien avec feedback
+│   │   ├── Toast.tsx               # Composant notification toast
+│   │   └── ToastProvider.tsx       # Context provider pour les toasts
 │   ├── lib/
 │   │   ├── prisma.ts               # Client Prisma singleton
 │   │   ├── scoring.ts              # Algorithme de scoring (voir section 5)
 │   │   ├── questions.ts            # Données du questionnaire (voir section 4)
-│   │   └── auth.ts                 # Helpers auth (cookie, middleware)
+│   │   ├── auth.ts                 # Helpers auth (JWT jose, cookie httpOnly)
+│   │   └── config.ts               # Constantes de configuration
 │   └── middleware.ts               # Middleware Next.js pour protéger /dashboard/*
 ├── .env.example
 ├── Dockerfile
-├── docker-compose.yml              # Pour dev local
+├── deploy.sh                       # Script de déploiement Lightsail
 ├── package.json
 ├── tailwind.config.ts
 ├── tsconfig.json
+├── tsconfig.seed.json              # tsconfig pour le script de seed
+├── IMPLEMENTATION_SUMMARY.md       # Résumé d'implémentation (questions + scoring)
 └── README.md
 ```
 
@@ -974,18 +1087,19 @@ Script pour la démo au client Sébastien Dunet :
 
 1. **Ouvrir** `https://[domain]/login` — se connecter avec `demo@solydev.fr` / `demo2026`
 2. **Dashboard** — montrer les sessions d'exemple (1 complétée, 1 en attente, 1 expirée)
-3. **Cliquer sur la session complétée** — montrer la roue A2P avec le point focal, les scores
+3. **Cliquer sur la session complétée (Jean Dupont)** — montrer la roue A2P avec le point focal et les scores F5 R4 P3 M5
 4. **Montrer les "Coming Soon"** — texte du profil, export PDF, Soc/Psy, etc.
-5. **Revenir au dashboard** — créer une nouvelle session "Démo live"
-6. **Copier le lien** — l'ouvrir dans un navigateur incognito
-7. **Passer le questionnaire** — montrer le tunnel (intro, questions une par une, lexique, progression)
-8. **Terminer** — voir le message de confirmation côté coaché
-9. **Revenir au dashboard** — la session est maintenant "Terminée"
-10. **Voir le résultat** — la roue A2P est générée avec les scores
+5. **Sidebar — "Gestion des coachés"** — montrer la liste des coachés, les filtres actif/inactif, la création et l'édition d'une Person
+6. **Revenir au dashboard** — créer une nouvelle session en sélectionnant un coaché existant
+7. **Copier le lien** — l'ouvrir dans un navigateur incognito
+8. **Passer le questionnaire** — montrer le tunnel (intro, questions une par une, lexique, progression)
+9. **Terminer** — voir le message de confirmation côté coaché
+10. **Revenir au dashboard** — la session est maintenant "Terminée"
+11. **Voir le résultat** — la roue A2P est générée avec les scores
 
 **Points à souligner pendant la démo** :
 - "On a bien compris que le coaché ne voit pas ses résultats"
-- "Le lien est éphémère et expire après 48h"
+- "Les coachés sont des entités réutilisables — un praticien retrouve tous ses coachés et peut créer plusieurs sessions pour une même personne"
 - "Toutes les fonctionnalités du brief sont identifiées et prévues" (montrer les Coming Soon)
 - "La stack est prête pour la production : Next.js + PostgreSQL + Stripe"
 - "L'algorithme officiel sera branché dès que l'IA2P nous fournit la grille"
