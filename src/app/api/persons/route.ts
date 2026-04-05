@@ -5,6 +5,8 @@ import prisma from '@/lib/prisma'
 /**
  * GET /api/persons
  * List all persons for authenticated practitioner
+ * Query params:
+ *   - filter: 'all' | 'active' | 'inactive' (default: 'active')
  */
 export async function GET(request: NextRequest) {
   try {
@@ -29,9 +31,22 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Get filter parameter from query
+    const { searchParams } = new URL(request.url)
+    const filter = searchParams.get('filter') || 'active'
+
+    // Build where clause based on filter
+    const whereClause: any = { practitionerId: practitioner.id }
+    if (filter === 'active') {
+      whereClause.isActive = true
+    } else if (filter === 'inactive') {
+      whereClause.isActive = false
+    }
+    // 'all' doesn't add isActive filter
+
     // Get all persons for this practitioner with session count
     const persons = await prisma.person.findMany({
-      where: { practitionerId: practitioner.id },
+      where: whereClause,
       include: {
         _count: {
           select: { sessions: true },

@@ -135,7 +135,7 @@ export async function PATCH(
 
     // Get update data from request body
     const body = await request.json()
-    const { firstName, lastName, email } = body
+    const { firstName, lastName, email, isActive } = body
 
     // Validate required fields
     if (!firstName || !lastName) {
@@ -145,14 +145,22 @@ export async function PATCH(
       )
     }
 
+    // Build update data object
+    const updateData: any = {
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      email: email?.trim() || null,
+    }
+
+    // Add isActive if provided
+    if (typeof isActive === 'boolean') {
+      updateData.isActive = isActive
+    }
+
     // Update person
     const updatedPerson = await prisma.person.update({
       where: { id },
-      data: {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        email: email?.trim() || null,
-      },
+      data: updateData,
     })
 
     return NextResponse.json({ person: updatedPerson })
