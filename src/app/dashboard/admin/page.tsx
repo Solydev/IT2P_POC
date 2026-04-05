@@ -237,8 +237,8 @@ export default function AdminPage() {
               <h3 className="text-base font-semibold text-it2p-text mb-4">Emails système</h3>
               <div className="space-y-3">
                 {[
-                  { label: 'Expéditeur', value: 'noreply@it2p.fr' },
-                  { label: 'Objet par défaut', value: 'Votre questionnaire IT2P' },
+                  { label: 'Expéditeur', value: 'noreply@ia2p.fr' },
+                  { label: 'Objet par défaut', value: 'Votre questionnaire A2P' },
                 ].map((field) => (
                   <div key={field.label} className="flex items-center gap-4">
                     <label className="w-40 text-sm text-it2p-text-secondary flex-shrink-0">{field.label}</label>
