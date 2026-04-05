@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useToast } from './ToastProvider'
 
+const MODAL_CLOSE_DELAY_MS = 500
+
 interface SessionCreateModalProps {
   isOpen: boolean
   onClose: () => void
@@ -41,7 +43,7 @@ export default function SessionCreateModal({
       // Copy the link to clipboard
       try {
         await navigator.clipboard.writeText(data.testLink)
-        showToast('Session créée ! Lien copié dans le presse-papier', 'success')
+        showToast('Session créée ! Lien copié dans le presse-papiers', 'success')
       } catch (clipboardError) {
         console.error('Failed to copy link:', clipboardError)
         showToast('Session créée ! Impossible de copier le lien automatiquement', 'info')
@@ -53,7 +55,7 @@ export default function SessionCreateModal({
       // Close the modal after a short delay to allow the user to see the success message
       setTimeout(() => {
         handleClose()
-      }, 500)
+      }, MODAL_CLOSE_DELAY_MS)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de la création')
     } finally {
