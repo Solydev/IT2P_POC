@@ -82,41 +82,61 @@ export default function DashboardLayoutClient({
               Gestion des coachés
             </Link>
 
-            <ComingSoon inline>
-              <button
-                disabled
-                className="w-full text-left px-4 py-2.5 rounded text-it2p-text-secondary cursor-not-allowed"
-              >
-                Mon abonnement
-              </button>
-            </ComingSoon>
+            <Link
+              href="/dashboard/subscription"
+              className={`flex items-center justify-between px-4 py-2.5 rounded transition-colors ${
+                pathname?.startsWith('/dashboard/subscription')
+                  ? 'bg-it2p-accent text-white'
+                  : 'text-it2p-text hover:bg-it2p-sand-light'
+              }`}
+            >
+              <span>Mon abonnement</span>
+              <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-it2p-warning/15 text-it2p-warning">
+                Demo
+              </span>
+            </Link>
 
-            <ComingSoon inline>
-              <button
-                disabled
-                className="w-full text-left px-4 py-2.5 rounded text-it2p-text-secondary cursor-not-allowed"
-              >
-                Personnalisation
-              </button>
-            </ComingSoon>
+            <Link
+              href="/dashboard/customization"
+              className={`flex items-center justify-between px-4 py-2.5 rounded transition-colors ${
+                pathname?.startsWith('/dashboard/customization')
+                  ? 'bg-it2p-accent text-white'
+                  : 'text-it2p-text hover:bg-it2p-sand-light'
+              }`}
+            >
+              <span>Personnalisation</span>
+              <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-it2p-warning/15 text-it2p-warning">
+                Demo
+              </span>
+            </Link>
 
-            <ComingSoon inline>
-              <button
-                disabled
-                className="w-full text-left px-4 py-2.5 rounded text-it2p-text-secondary cursor-not-allowed"
-              >
-                Bilans collectifs
-              </button>
-            </ComingSoon>
+            <Link
+              href="/dashboard/reports"
+              className={`flex items-center justify-between px-4 py-2.5 rounded transition-colors ${
+                pathname?.startsWith('/dashboard/reports')
+                  ? 'bg-it2p-accent text-white'
+                  : 'text-it2p-text hover:bg-it2p-sand-light'
+              }`}
+            >
+              <span>Bilans collectifs</span>
+              <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-it2p-warning/15 text-it2p-warning">
+                Demo
+              </span>
+            </Link>
 
-            <ComingSoon inline>
-              <button
-                disabled
-                className="w-full text-left px-4 py-2.5 rounded text-it2p-text-secondary cursor-not-allowed"
-              >
-                Administration IA2P
-              </button>
-            </ComingSoon>
+            <Link
+              href="/dashboard/admin"
+              className={`flex items-center justify-between px-4 py-2.5 rounded transition-colors ${
+                pathname?.startsWith('/dashboard/admin')
+                  ? 'bg-it2p-accent text-white'
+                  : 'text-it2p-text hover:bg-it2p-sand-light'
+              }`}
+            >
+              <span>Administration IA2P</span>
+              <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-it2p-warning/15 text-it2p-warning">
+                Demo
+              </span>
+            </Link>
           </nav>
 
           {/* User info and logout */}
