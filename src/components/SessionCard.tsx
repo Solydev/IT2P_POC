@@ -1,8 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import StatusBadge from './StatusBadge'
 import CopyLinkButton from './CopyLinkButton'
+import SessionEditModal from './SessionEditModal'
 import { getAppUrl } from '@/lib/config'
 
 interface SessionCardProps {
@@ -22,6 +24,8 @@ interface SessionCardProps {
       profileCode: string
     } | null
   }
+  onSessionUpdated?: () => void
+  onSessionDeleted?: () => void
 }
 
 export default function SessionCard({ session }: SessionCardProps) {
