@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import PersonCard from '@/components/PersonCard'
 import PersonCreateModal from '@/components/PersonCreateModal'
 import PersonEditModal from '@/components/PersonEditModal'
@@ -28,7 +28,7 @@ export default function PersonsPage() {
   const [selectedPersonIds, setSelectedPersonIds] = useState<Set<string>>(new Set())
   const [isBulkDeactivating, setIsBulkDeactivating] = useState(false)
 
-  const fetchPersons = async () => {
+  const fetchPersons = useCallback(async () => {
     setLoading(true)
     setError('')
     try {
@@ -45,14 +45,14 @@ export default function PersonsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filter])
 
   useEffect(() => {
     fetchPersons()
     // Exit selection mode when filter changes
     setSelectionMode(false)
     setSelectedPersonIds(new Set())
-  }, [filter])
+  }, [filter, fetchPersons])
 
   const handlePersonCreated = () => {
     fetchPersons()
