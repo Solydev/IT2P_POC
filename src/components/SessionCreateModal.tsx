@@ -139,7 +139,7 @@ export default function SessionCreateModal({
                 </div>
               ) : persons.length === 0 ? (
                 <div className="w-full px-3 py-2 border border-it2p-sand/50 rounded bg-gray-50 text-it2p-text-secondary">
-                  Aucune personne disponible. Créez-en une d'abord.
+                  Aucune personne disponible. Créez-en une d&apos;abord.
                 </div>
               ) : (
                 <select

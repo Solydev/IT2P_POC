@@ -7,9 +7,10 @@ import SessionCreateModal from '@/components/SessionCreateModal'
 interface Session {
   id: string
   token: string
+  personId: string
   status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'EXPIRED'
   coacheeName: string | null
-  context: string | null
+  context: string
   createdAt: string
   expiresAt?: string | null
   completedAt?: string | null
