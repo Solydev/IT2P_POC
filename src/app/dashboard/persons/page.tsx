@@ -265,7 +265,7 @@ export default function PersonsPage() {
             <p className="text-it2p-text-secondary mb-4">
               {filter === 'all'
                 ? 'Commencez par créer votre premier coaché'
-                : 'Essayez de changer le filtre pour voir d\'autres coachés'}
+                : 'Essayez de changer le filtre pour voir d'autres coachés'}
             </p>
             {filter === 'all' && (
               <button
