@@ -72,21 +72,21 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-serif font-bold text-it2p-text mb-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+          <div className="flex-1">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-it2p-text mb-2">
               Mes sessions
             </h1>
-            <p className="text-it2p-text-secondary">
+            <p className="text-sm sm:text-base text-it2p-text-secondary">
               Gérez vos sessions et suivez les résultats de vos coachés
             </p>
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-6 py-3 bg-it2p-accent text-white font-medium rounded-lg hover:bg-it2p-accent-hover transition-colors shadow-sm"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-it2p-accent text-white font-medium rounded-lg hover:bg-it2p-accent-hover transition-colors shadow-sm whitespace-nowrap self-start sm:self-auto"
           >
             + Nouvelle session
           </button>
@@ -94,17 +94,17 @@ export default function DashboardPage() {
 
         {/* Sessions list */}
         {sessions.length === 0 ? (
-          <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-12 text-center">
+          <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-6 sm:p-8 lg:p-12 text-center">
             <div className="max-w-md mx-auto">
-              <h2 className="text-xl font-serif font-bold text-it2p-text mb-3">
+              <h2 className="text-lg sm:text-xl font-serif font-bold text-it2p-text mb-3">
                 Aucune session pour le moment
               </h2>
-              <p className="text-it2p-text-secondary mb-6">
+              <p className="text-sm sm:text-base text-it2p-text-secondary mb-6">
                 Créez votre première session pour commencer à utiliser l&apos;IT2P avec vos coachés.
               </p>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="px-6 py-3 bg-it2p-accent text-white font-medium rounded-lg hover:bg-it2p-accent-hover transition-colors"
+                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-it2p-accent text-white font-medium rounded-lg hover:bg-it2p-accent-hover transition-colors"
               >
                 Créer ma première session
               </button>
