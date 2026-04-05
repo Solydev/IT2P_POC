@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useState } from 'react'
 import ComingSoon from '@/components/ComingSoon'
 
 interface DashboardLayoutProps {
@@ -15,6 +16,7 @@ export default function DashboardLayoutClient({
 }: DashboardLayoutProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const handleLogout = async () => {
     try {
@@ -29,8 +31,21 @@ export default function DashboardLayoutClient({
 
   return (
     <div className="min-h-screen bg-it2p-bg flex">
+      {/* Mobile overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-it2p-surface border-r border-it2p-sand/30 flex flex-col">
+      <aside className={`
+        fixed lg:static inset-y-0 left-0 z-50
+        w-64 bg-it2p-surface border-r border-it2p-sand/30 flex flex-col
+        transform transition-transform duration-300 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
         {/* Logo */}
         <div className="p-6 border-b border-it2p-sand/30">
           <h1 className="text-2xl font-serif font-bold text-it2p-accent">
@@ -108,6 +123,21 @@ export default function DashboardLayoutClient({
 
       {/* Main content */}
       <main className="flex-1 overflow-auto">
+        {/* Mobile header with hamburger */}
+        <div className="lg:hidden sticky top-0 z-30 bg-it2p-surface border-b border-it2p-sand/30 px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 rounded-lg hover:bg-it2p-sand-light transition-colors"
+            aria-label="Toggle menu"
+          >
+            <svg className="w-6 h-6 text-it2p-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h1 className="text-xl font-serif font-bold text-it2p-accent">IT2P</h1>
+          <div className="w-10" /> {/* Spacer for centering */}
+        </div>
+        
         {children}
       </main>
     </div>
