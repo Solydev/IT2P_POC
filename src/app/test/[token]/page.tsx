@@ -108,7 +108,7 @@ export default function TestPage() {
           <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-a2p-accent rounded-full flex items-center justify-center text-white font-bold text-sm">
-                IT2P
+                A2P
               </div>
               <span className="font-serif text-lg text-a2p-text">Institut IA2P</span>
             </div>
@@ -127,7 +127,7 @@ export default function TestPage() {
           <div className="bg-a2p-surface rounded-lg shadow-lg border border-a2p-sand p-8 md:p-12">
             <div className="text-center mb-8">
               <div className="w-20 h-20 bg-a2p-accent rounded-full flex items-center justify-center text-white font-bold text-3xl mx-auto mb-6">
-                IT2P
+                A2P
               </div>
               <h1 className="text-3xl md:text-4xl font-serif font-bold text-a2p-text mb-3">
                 {INTRO_TEXT.title}
@@ -187,7 +187,7 @@ export default function TestPage() {
           <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-a2p-accent rounded-full flex items-center justify-center text-white font-bold text-sm">
-                IT2P
+                A2P
               </div>
               <span className="font-serif text-lg text-a2p-text">Test A2P</span>
             </div>
