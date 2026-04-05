@@ -49,14 +49,17 @@ export default function DashboardLayoutClient({
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}>
           {/* Logo */}
-          <div className="p-6 border-b border-it2p-sand/30">
+          <Link 
+            href="/dashboard" 
+            className="p-6 border-b border-it2p-sand/30 block hover:bg-it2p-sand-light/50 transition-colors cursor-pointer"
+          >
             <h1 className="text-2xl font-serif font-bold text-it2p-accent">
               IT2P
             </h1>
             <p className="text-xs text-it2p-text-secondary mt-1">
               Inventaire du Travail en 2 Pôles
             </p>
-          </div>
+          </Link>
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-1">
@@ -167,7 +170,12 @@ export default function DashboardLayoutClient({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <h1 className="text-xl font-serif font-bold text-it2p-accent absolute left-1/2 -translate-x-1/2">IT2P</h1>
+            <Link 
+              href="/dashboard" 
+              className="text-xl font-serif font-bold text-it2p-accent absolute left-1/2 -translate-x-1/2 hover:opacity-80 transition-opacity cursor-pointer"
+            >
+              IT2P
+            </Link>
           </div>
           
           {children}
