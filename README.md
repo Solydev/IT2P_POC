@@ -1,4 +1,4 @@
-# Spécifications Exhaustives — Prototype IT2P Online
+# Spécifications Exhaustives — Prototype A2P Online
 ## Solydev × Institut IA2P
 
 **Version** : 1.0 — Specs pour implémentation par Claude Code  
@@ -25,7 +25,7 @@ npm run dev              # Starting locally
 
 ## 1. Objectif du prototype
 
-Démontrer en conditions réelles le parcours cœur de l'outil IT2P en ligne :  
+Démontrer en conditions réelles le parcours cœur de l'outil A2P en ligne :  
 **Un praticien envoie un lien → un coaché passe le questionnaire → le praticien consulte le résultat (roue A2P + profil).**
 
 Le prototype sert à montrer au client que Solydev a compris le besoin, la logique métier, et qu'on est capable de livrer un produit moderne et fonctionnel. Les fonctionnalités hors périmètre sont présentes visuellement dans l'interface en mode **"Coming Soon"**.
@@ -577,7 +577,7 @@ interface RoueA2PProps {
 
 ### 6.5 Éléments visuels à rendre
 
-1. **En-tête** : cadre avec logo IT2P (texte "IT₂P" stylisé), puis tableau de métadonnées (date, analysé, résultat, point focal, type de personnalité)
+1. **En-tête** : cadre avec logo A2P (texte "A2P" stylisé), puis tableau de métadonnées (date, analysé, résultat, point focal, type de personnalité)
 2. **Labels des axes** : F (haut, grande lettre), R (bas), P (gauche), M (droite)
 3. **Contour octogonal** : stroke noir, fill transparent
 4. **Grille de points** : points de taille variable (plus gros = positions entières impaires), alternance gros/petits
@@ -606,14 +606,14 @@ interface RoueA2PProps {
 - Formulaire simple : email + mot de passe
 - Credentials hardcodés comparés en API route
 - En cas de succès : cookie httpOnly + redirect `/dashboard`
-- Design : centré, logo IT2P en haut, sobre
+- Design : centré, logo A2P en haut, sobre
 
 ### 7.2 Dashboard Praticien (`/dashboard`)
 
 **Layout** : sidebar gauche + contenu principal (responsive — hamburger sur mobile)
 
 **Sidebar** :
-- Logo IT2P + sous-titre "Inventaire du Travail en 2 Pôles"
+- Logo A2P + sous-titre "Analyse de la Personnalité Professionnelle"
 - Liens actifs :
   - "Mes sessions" (`/dashboard`)
   - "Gestion des coachés" (`/dashboard/persons`)
@@ -672,7 +672,7 @@ interface RoueA2PProps {
 - Token valide → afficher le questionnaire
 
 **Écran d'introduction** :
-- Logo IT2P
+- Logo A2P
 - Titre + préambule + instructions (voir INTRO_TEXT section 4)
 - Bouton "Commencer la passation"
 - Coming Soon : emplacement timer "30:00" affiché mais statique

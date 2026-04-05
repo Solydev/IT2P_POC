@@ -60,14 +60,14 @@ export default function ReportsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-it2p-text mb-2">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-a2p-text mb-2">
               Bilans collectifs
             </h1>
-            <p className="text-sm sm:text-base text-it2p-text-secondary">
+            <p className="text-sm sm:text-base text-a2p-text-secondary">
               Analysez les tendances et la répartition des profils de vos coachés
             </p>
           </div>
-          <button className="self-start sm:self-auto px-4 py-2.5 bg-it2p-surface border border-it2p-sand/50 text-it2p-text rounded-lg hover:bg-it2p-sand-light transition-colors text-sm font-medium flex items-center gap-2">
+          <button className="self-start sm:self-auto px-4 py-2.5 bg-a2p-surface border border-a2p-sand/50 text-a2p-text rounded-lg hover:bg-a2p-sand-light transition-colors text-sm font-medium flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
@@ -83,8 +83,8 @@ export default function ReportsPage() {
               onClick={() => setPeriod(opt)}
               className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
                 period === opt
-                  ? 'bg-it2p-accent text-white'
-                  : 'bg-it2p-surface border border-it2p-sand/30 text-it2p-text hover:bg-it2p-sand-light'
+                  ? 'bg-a2p-accent text-white'
+                  : 'bg-a2p-surface border border-a2p-sand/30 text-a2p-text hover:bg-a2p-sand-light'
               }`}
             >
               {opt}
@@ -95,17 +95,17 @@ export default function ReportsPage() {
         {/* Stats bar */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {stats.map((s, i) => (
-            <div key={i} className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
-              <p className="text-xs text-it2p-text-secondary mb-1">{s.label}</p>
-              <p className="text-2xl font-bold text-it2p-text font-serif">{s.value}</p>
-              <p className="text-xs text-it2p-text-secondary mt-1">{s.sub}</p>
+            <div key={i} className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-4 shadow-sm">
+              <p className="text-xs text-a2p-text-secondary mb-1">{s.label}</p>
+              <p className="text-2xl font-bold text-a2p-text font-serif">{s.value}</p>
+              <p className="text-xs text-a2p-text-secondary mt-1">{s.sub}</p>
             </div>
           ))}
         </div>
 
         {/* Profile distribution */}
-        <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-6 shadow-sm mb-8">
-          <h2 className="text-base font-semibold text-it2p-text mb-5">
+        <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-6 shadow-sm mb-8">
+          <h2 className="text-base font-semibold text-a2p-text mb-5">
             Répartition des profils
           </h2>
           <div className="space-y-3">
@@ -113,10 +113,10 @@ export default function ReportsPage() {
               const pct = Math.round((p.count / maxCount) * 100)
               return (
                 <div key={p.code} className="flex items-center gap-3">
-                  <span className="text-xs font-mono font-semibold text-it2p-text w-12 flex-shrink-0">
+                  <span className="text-xs font-mono font-semibold text-a2p-text w-12 flex-shrink-0">
                     {p.code}
                   </span>
-                  <div className="flex-1 h-6 bg-it2p-sand/20 rounded overflow-hidden">
+                  <div className="flex-1 h-6 bg-a2p-sand/20 rounded overflow-hidden">
                     <div
                       className="h-full rounded flex items-center px-2 transition-all duration-500"
                       style={{ width: `${pct}%`, backgroundColor: p.color }}
@@ -127,9 +127,9 @@ export default function ReportsPage() {
                     </div>
                   </div>
                   {pct <= 20 && (
-                    <span className="text-xs text-it2p-text-secondary w-4">{p.count}</span>
+                    <span className="text-xs text-a2p-text-secondary w-4">{p.count}</span>
                   )}
-                  <span className="text-xs text-it2p-text-secondary w-32 hidden sm:block">
+                  <span className="text-xs text-a2p-text-secondary w-32 hidden sm:block">
                     {p.label}
                   </span>
                 </div>
@@ -139,32 +139,32 @@ export default function ReportsPage() {
         </div>
 
         {/* Group sessions list */}
-        <h2 className="text-base font-semibold text-it2p-text mb-4">
+        <h2 className="text-base font-semibold text-a2p-text mb-4">
           Sessions par groupe / contexte
         </h2>
         <div className="space-y-3">
           {groupSessions.map((group) => (
             <div
               key={group.id}
-              className="bg-it2p-surface border border-it2p-sand/30 rounded-lg shadow-sm overflow-hidden"
+              className="bg-a2p-surface border border-a2p-sand/30 rounded-lg shadow-sm overflow-hidden"
             >
               <button
-                className="w-full px-6 py-4 flex items-center justify-between gap-4 hover:bg-it2p-sand-light/50 transition-colors text-left"
+                className="w-full px-6 py-4 flex items-center justify-between gap-4 hover:bg-a2p-sand-light/50 transition-colors text-left"
                 onClick={() => setExpandedGroup(expandedGroup === group.id ? null : group.id)}
               >
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-it2p-text truncate">{group.context}</p>
-                  <p className="text-xs text-it2p-text-secondary mt-0.5">{group.date}</p>
+                  <p className="font-medium text-a2p-text truncate">{group.context}</p>
+                  <p className="text-xs text-a2p-text-secondary mt-0.5">{group.date}</p>
                 </div>
                 <div className="flex items-center gap-4 flex-shrink-0">
                   <div className="text-right hidden sm:block">
-                    <p className="text-sm font-medium text-it2p-text">
+                    <p className="text-sm font-medium text-a2p-text">
                       {group.completed}/{group.participants}
                     </p>
-                    <p className="text-xs text-it2p-text-secondary">complétés</p>
+                    <p className="text-xs text-a2p-text-secondary">complétés</p>
                   </div>
                   <svg
-                    className={`w-4 h-4 text-it2p-text-secondary transition-transform ${
+                    className={`w-4 h-4 text-a2p-text-secondary transition-transform ${
                       expandedGroup === group.id ? 'rotate-180' : ''
                     }`}
                     fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -175,17 +175,17 @@ export default function ReportsPage() {
               </button>
 
               {expandedGroup === group.id && (
-                <div className="px-6 pb-5 pt-1 border-t border-it2p-sand/20">
+                <div className="px-6 pb-5 pt-1 border-t border-a2p-sand/20">
                   <div className="grid sm:grid-cols-2 gap-4 mt-3">
                     <div>
-                      <p className="text-xs font-medium text-it2p-text-secondary mb-2 uppercase tracking-wide">
+                      <p className="text-xs font-medium text-a2p-text-secondary mb-2 uppercase tracking-wide">
                         Profils identifiés
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {group.profiles.map((profile, i) => (
                           <span
                             key={i}
-                            className="px-2.5 py-1 bg-it2p-accent/10 text-it2p-accent text-xs font-mono font-semibold rounded"
+                            className="px-2.5 py-1 bg-a2p-accent/10 text-a2p-accent text-xs font-mono font-semibold rounded"
                           >
                             {profile}
                           </span>
@@ -193,27 +193,27 @@ export default function ReportsPage() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-it2p-text-secondary mb-2 uppercase tracking-wide">
+                      <p className="text-xs font-medium text-a2p-text-secondary mb-2 uppercase tracking-wide">
                         Complétion
                       </p>
                       <div className="flex items-center gap-3">
-                        <div className="flex-1 h-2 bg-it2p-sand/30 rounded-full overflow-hidden">
+                        <div className="flex-1 h-2 bg-a2p-sand/30 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-it2p-success rounded-full"
+                            className="h-full bg-a2p-success rounded-full"
                             style={{ width: `${Math.round((group.completed / group.participants) * 100)}%` }}
                           />
                         </div>
-                        <span className="text-xs text-it2p-text-secondary">
+                        <span className="text-xs text-a2p-text-secondary">
                           {Math.round((group.completed / group.participants) * 100)} %
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="mt-4 flex gap-2">
-                    <button className="px-4 py-2 text-xs bg-it2p-accent text-white rounded hover:bg-it2p-accent-hover transition-colors font-medium">
+                    <button className="px-4 py-2 text-xs bg-a2p-accent text-white rounded hover:bg-a2p-accent-hover transition-colors font-medium">
                       Voir le bilan détaillé
                     </button>
-                    <button className="px-4 py-2 text-xs bg-it2p-surface border border-it2p-sand/40 text-it2p-text rounded hover:bg-it2p-sand-light transition-colors">
+                    <button className="px-4 py-2 text-xs bg-a2p-surface border border-a2p-sand/40 text-a2p-text rounded hover:bg-a2p-sand-light transition-colors">
                       Exporter PDF
                     </button>
                   </div>

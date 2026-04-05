@@ -116,7 +116,7 @@ export default function Questionnaire({
         <button
           onClick={handlePrevious}
           disabled={currentQuestionIndex === 0 || isSubmitting}
-          className="px-6 py-2 border-2 border-it2p-sand text-it2p-text rounded-lg hover:bg-it2p-sand-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          className="px-6 py-2 border-2 border-a2p-sand text-a2p-text rounded-lg hover:bg-a2p-sand-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
         >
           ← Précédent
         </button>
@@ -124,7 +124,7 @@ export default function Questionnaire({
         <button
           onClick={handleNext}
           disabled={!currentAnswer || isSubmitting}
-          className="px-6 py-2 bg-it2p-accent text-white rounded-lg hover:bg-it2p-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          className="px-6 py-2 bg-a2p-accent text-white rounded-lg hover:bg-a2p-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
         >
           {isSubmitting
             ? 'Enregistrement...'
@@ -134,7 +134,7 @@ export default function Questionnaire({
         </button>
       </div>
 
-      <div className="mt-4 text-center text-sm text-it2p-text-secondary">
+      <div className="mt-4 text-center text-sm text-a2p-text-secondary">
         {Object.keys(answers).length} / {questions.length} questions répondues
       </div>
     </div>

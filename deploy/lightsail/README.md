@@ -32,7 +32,7 @@ If you are willing to run IPv6-only, Lightsail has cheaper plans, but O2switch a
 Create `.env` on the server with values like these:
 
 ```env
-DATABASE_URL="file:./data/it2p.db"
+DATABASE_URL="file:./data/a2p.db"
 PRACTITIONER_EMAIL="admin@your-domain.tld"
 PRACTITIONER_PASSWORD="replace-with-a-strong-password"
 PRACTITIONER_NAME="Praticien"
@@ -42,7 +42,7 @@ NEXT_PUBLIC_APP_URL="https://app.your-domain.tld"
 
 Notes:
 
-- `DATABASE_URL="file:./data/it2p.db"` is resolved by Prisma relative to the Prisma schema, so the database file will live under `prisma/data/it2p.db`
+- `DATABASE_URL="file:./data/a2p.db"` is resolved by Prisma relative to the Prisma schema, so the database file will live under `prisma/data/a2p.db`
 - Make sure `prisma/data` exists and is writable by the app user
 - `NEXT_PUBLIC_APP_URL` must match the final public URL exactly, including `https`
 
@@ -65,8 +65,8 @@ Clone and prepare the project:
 cd /var/www
 sudo mkdir -p /var/www
 sudo chown "$USER":"$USER" /var/www
-git clone <your-repo-url> it2p
-cd it2p
+git clone <your-repo-url> a2p
+cd a2p
 npm ci
 mkdir -p prisma/data
 cp .env.example .env
@@ -81,31 +81,31 @@ If the seed should not run twice in production, skip it after the first deploy.
 
 ## Run the app with systemd
 
-Copy the sample service file from `deploy/lightsail/it2p.service.example` to `/etc/systemd/system/it2p.service` and update the paths, user, and domain values.
+Copy the sample service file from `deploy/lightsail/a2p.service.example` to `/etc/systemd/system/a2p.service` and update the paths, user, and domain values.
 
 Then enable it:
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now it2p
-sudo systemctl status it2p
+sudo systemctl enable --now a2p
+sudo systemctl status a2p
 ```
 
 Useful commands:
 
 ```bash
-sudo journalctl -u it2p -n 100 --no-pager
-sudo systemctl restart it2p
+sudo journalctl -u a2p -n 100 --no-pager
+sudo systemctl restart a2p
 ```
 
 ## Configure Nginx
 
-Copy `deploy/lightsail/nginx.conf.example` to `/etc/nginx/sites-available/it2p` and replace `app.your-domain.tld` with your real domain.
+Copy `deploy/lightsail/nginx.conf.example` to `/etc/nginx/sites-available/a2p` and replace `app.your-domain.tld` with your real domain.
 
 Enable the site:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/it2p /etc/nginx/sites-enabled/it2p
+sudo ln -s /etc/nginx/sites-available/a2p /etc/nginx/sites-enabled/a2p
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -172,12 +172,12 @@ Use this exact order:
 For later deployments:
 
 ```bash
-cd /var/www/it2p
+cd /var/www/a2p
 git pull
 npm ci
 npx prisma migrate deploy
 npm run build
-sudo systemctl restart it2p
+sudo systemctl restart a2p
 ```
 
 ## Backups and risk level
@@ -187,7 +187,7 @@ This setup is cheap, but it has one important tradeoff: SQLite lives on a single
 For a prototype, that is acceptable. For anything client-critical, add at least one of these:
 
 1. Lightsail instance snapshots before each release
-2. A nightly copy of `prisma/data/it2p.db` to S3 or another backup target
+2. A nightly copy of `prisma/data/a2p.db` to S3 or another backup target
 3. A future migration from SQLite to PostgreSQL
 
 ## Cost summary

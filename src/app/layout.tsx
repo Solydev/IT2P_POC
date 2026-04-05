@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'IT2P — Institut IA2P',
-  description: 'Analyse de Personnalité Professionnelle',
+  title: 'A2P — Institut IA2P',
+  description: 'Analyse de la Personnalité Professionnelle',
 }
 
 export default function RootLayout({

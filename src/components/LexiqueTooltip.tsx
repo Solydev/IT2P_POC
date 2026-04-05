@@ -15,10 +15,10 @@ export default function LexiqueTooltip({ entries }: LexiqueTooltipProps) {
   }
 
   return (
-    <div className="mt-6 border-t border-it2p-sand pt-4">
+    <div className="mt-6 border-t border-a2p-sand pt-4">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 text-it2p-accent hover:text-it2p-accent-hover font-medium text-sm transition-colors"
+        className="flex items-center gap-2 text-a2p-accent hover:text-a2p-accent-hover font-medium text-sm transition-colors"
         type="button"
       >
         <svg
@@ -36,10 +36,10 @@ export default function LexiqueTooltip({ entries }: LexiqueTooltipProps) {
         <div className="mt-3 space-y-3 pl-6">
           {entries.map((entry, index) => (
             <div key={index} className="text-sm">
-              <dt className="font-semibold text-it2p-text">
+              <dt className="font-semibold text-a2p-text">
                 {entry.term}
               </dt>
-              <dd className="mt-1 text-it2p-text-secondary">
+              <dd className="mt-1 text-a2p-text-secondary">
                 {entry.definition}
               </dd>
             </div>

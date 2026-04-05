@@ -46,7 +46,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-indigo-600 text-white text-2xl font-bold">
-            IT2P
+            A2P
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Espace Praticien
