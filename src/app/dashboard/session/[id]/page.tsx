@@ -57,16 +57,16 @@ export default async function SessionPage({ params }: PageProps) {
   if (!sessionData.result) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-8 text-center">
-          <h1 className="text-2xl font-serif font-bold text-it2p-text mb-4">
+        <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-8 text-center">
+          <h1 className="text-2xl font-serif font-bold text-a2p-text mb-4">
             Résultat non disponible
           </h1>
-          <p className="text-it2p-text-secondary mb-6">
+          <p className="text-a2p-text-secondary mb-6">
             Cette session n&apos;a pas encore été complétée ou n&apos;a pas de résultat calculé.
           </p>
           <Link
             href="/dashboard"
-            className="inline-block px-4 py-2 bg-it2p-accent text-white rounded hover:bg-it2p-accent-hover transition-colors"
+            className="inline-block px-4 py-2 bg-a2p-accent text-white rounded hover:bg-a2p-accent-hover transition-colors"
           >
             Retour au tableau de bord
           </Link>
@@ -112,7 +112,7 @@ export default async function SessionPage({ params }: PageProps) {
       <div className="mb-6">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-it2p-accent hover:text-it2p-accent-hover transition-colors"
+          className="inline-flex items-center gap-2 text-a2p-accent hover:text-a2p-accent-hover transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -122,13 +122,13 @@ export default async function SessionPage({ params }: PageProps) {
       </div>
 
       {/* Session header */}
-      <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-6 mb-8 shadow-sm">
+      <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-6 mb-8 shadow-sm">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h1 className="text-3xl font-serif font-bold text-it2p-text mb-2">
+            <h1 className="text-3xl font-serif font-bold text-a2p-text mb-2">
               Résultat de la session
             </h1>
-            <p className="text-it2p-text-secondary">
+            <p className="text-a2p-text-secondary">
               Session créée le {formatDate(sessionData.createdAt)}
               {sessionData.completedAt && (
                 <> • Complétée le {formatDate(sessionData.completedAt)}</>
@@ -140,8 +140,8 @@ export default async function SessionPage({ params }: PageProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div>
-            <span className="font-medium text-it2p-text">Coaché(e) :</span>
-            <span className="ml-2 text-it2p-text-secondary">
+            <span className="font-medium text-a2p-text">Coaché(e) :</span>
+            <span className="ml-2 text-a2p-text-secondary">
               {sessionData.person
                 ? `${sessionData.person.firstName} ${sessionData.person.lastName}`
                 : sessionData.coacheeName || 'Non renseigné'}
@@ -149,8 +149,8 @@ export default async function SessionPage({ params }: PageProps) {
           </div>
           {sessionData.context && (
             <div>
-              <span className="font-medium text-it2p-text">Contexte:</span>
-              <span className="ml-2 text-it2p-text-secondary">
+              <span className="font-medium text-a2p-text">Contexte:</span>
+              <span className="ml-2 text-a2p-text-secondary">
                 {sessionData.context}
               </span>
             </div>
@@ -160,8 +160,8 @@ export default async function SessionPage({ params }: PageProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left column: RoueA2P */}
-        <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-6 shadow-sm flex flex-col items-center">
-          <h2 className="text-2xl font-serif font-bold text-it2p-text mb-6">Roue A2P</h2>
+        <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-6 shadow-sm flex flex-col items-center">
+          <h2 className="text-2xl font-serif font-bold text-a2p-text mb-6">Roue A2P</h2>
           <RoueA2P scores={scores} metadata={metadata} />
         </div>
 
@@ -169,72 +169,72 @@ export default async function SessionPage({ params }: PageProps) {
         <div className="space-y-6">
           {/* Score cards */}
           <div>
-            <h2 className="text-2xl font-serif font-bold text-it2p-text mb-4">Scores</h2>
+            <h2 className="text-2xl font-serif font-bold text-a2p-text mb-4">Scores</h2>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
-                <div className="text-sm font-medium text-it2p-text-secondary mb-1">
+              <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-4 shadow-sm">
+                <div className="text-sm font-medium text-a2p-text-secondary mb-1">
                   F — Réflexion
                 </div>
-                <div className="text-3xl font-bold text-it2p-accent">
+                <div className="text-3xl font-bold text-a2p-accent">
                   {scores.F}
                 </div>
               </div>
 
-              <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
-                <div className="text-sm font-medium text-it2p-text-secondary mb-1">
+              <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-4 shadow-sm">
+                <div className="text-sm font-medium text-a2p-text-secondary mb-1">
                   R — Rigueur
                 </div>
-                <div className="text-3xl font-bold text-it2p-accent">
+                <div className="text-3xl font-bold text-a2p-accent">
                   {scores.R}
                 </div>
               </div>
 
-              <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
-                <div className="text-sm font-medium text-it2p-text-secondary mb-1">
+              <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-4 shadow-sm">
+                <div className="text-sm font-medium text-a2p-text-secondary mb-1">
                   P — Implication personnelle
                 </div>
-                <div className="text-3xl font-bold text-it2p-accent">
+                <div className="text-3xl font-bold text-a2p-accent">
                   {scores.P}
                 </div>
               </div>
 
-              <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
-                <div className="text-sm font-medium text-it2p-text-secondary mb-1">
+              <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-4 shadow-sm">
+                <div className="text-sm font-medium text-a2p-text-secondary mb-1">
                   M — Efficacité concrète
                 </div>
-                <div className="text-3xl font-bold text-it2p-accent">
+                <div className="text-3xl font-bold text-a2p-accent">
                   {scores.M}
                 </div>
               </div>
             </div>
 
-            <div className="bg-it2p-sand-light border border-it2p-sand rounded-lg p-4 shadow-sm mt-4">
-              <div className="text-sm font-medium text-it2p-text-secondary mb-1">
+            <div className="bg-a2p-sand-light border border-a2p-sand rounded-lg p-4 shadow-sm mt-4">
+              <div className="text-sm font-medium text-a2p-text-secondary mb-1">
                 Score total
               </div>
-              <div className="text-3xl font-bold text-it2p-text">
+              <div className="text-3xl font-bold text-a2p-text">
                 {scores.F + scores.R + scores.P + scores.M}
               </div>
             </div>
           </div>
 
           {/* Profile section */}
-          <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-6 shadow-sm">
-            <h2 className="text-2xl font-serif font-bold text-it2p-text mb-4">Profil</h2>
+          <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-6 shadow-sm">
+            <h2 className="text-2xl font-serif font-bold text-a2p-text mb-4">Profil</h2>
             <div className="space-y-3">
               <div>
-                <div className="text-sm font-medium text-it2p-text-secondary mb-1">
+                <div className="text-sm font-medium text-a2p-text-secondary mb-1">
                   Code profil
                 </div>
-                <div className="text-xl font-mono font-bold text-it2p-accent">
+                <div className="text-xl font-mono font-bold text-a2p-accent">
                   {metadata.profileCode}
                 </div>
               </div>
               <div>
-                <div className="text-sm font-medium text-it2p-text-secondary mb-1">
+                <div className="text-sm font-medium text-a2p-text-secondary mb-1">
                   Désignation
                 </div>
-                <div className="text-lg font-medium text-it2p-text">
+                <div className="text-lg font-medium text-a2p-text">
                   {metadata.profileName}
                 </div>
               </div>
@@ -245,11 +245,11 @@ export default async function SessionPage({ params }: PageProps) {
           <div className="space-y-4">
             {/* Profile description */}
             <ComingSoon>
-              <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-6 shadow-sm">
-                <h3 className="text-xl font-serif font-bold text-it2p-text mb-3">
+              <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-6 shadow-sm">
+                <h3 className="text-xl font-serif font-bold text-a2p-text mb-3">
                   Texte descriptif du profil
                 </h3>
-                <p className="text-it2p-text-secondary text-sm leading-relaxed">
+                <p className="text-a2p-text-secondary text-sm leading-relaxed">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
                   incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
                   nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -264,7 +264,7 @@ export default async function SessionPage({ params }: PageProps) {
               <ComingSoon>
                 <button
                   disabled
-                  className="w-full px-4 py-3 bg-it2p-accent text-white rounded hover:bg-it2p-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  className="w-full px-4 py-3 bg-a2p-accent text-white rounded hover:bg-a2p-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                 >
                   📄 Exporter en PDF
                 </button>
@@ -273,7 +273,7 @@ export default async function SessionPage({ params }: PageProps) {
               <ComingSoon>
                 <button
                   disabled
-                  className="w-full px-4 py-3 bg-it2p-surface border border-it2p-sand text-it2p-text rounded hover:bg-it2p-sand-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  className="w-full px-4 py-3 bg-a2p-surface border border-a2p-sand text-a2p-text rounded hover:bg-a2p-sand-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                 >
                   ✏️ Saisie manuelle
                 </button>
@@ -282,14 +282,14 @@ export default async function SessionPage({ params }: PageProps) {
 
             {/* Soc/Psy toggle */}
             <ComingSoon>
-              <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-4 shadow-sm">
+              <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-4 shadow-sm">
                 <label className="flex items-center gap-3 cursor-not-allowed">
                   <input
                     type="checkbox"
                     disabled
-                    className="w-5 h-5 text-it2p-accent rounded border-gray-300 focus:ring-it2p-accent disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-5 h-5 text-a2p-accent rounded border-gray-300 focus:ring-a2p-accent disabled:opacity-50 disabled:cursor-not-allowed"
                   />
-                  <span className="text-sm font-medium text-it2p-text">
+                  <span className="text-sm font-medium text-a2p-text">
                     Afficher l&apos;analyse Soc/Psy séparément
                   </span>
                 </label>

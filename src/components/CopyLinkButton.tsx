@@ -25,8 +25,8 @@ export default function CopyLinkButton({ link, className = '' }: CopyLinkButtonP
       onClick={handleCopy}
       className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
         copied
-          ? 'bg-it2p-success text-white'
-          : 'bg-it2p-accent text-white hover:bg-it2p-accent-hover'
+          ? 'bg-a2p-success text-white'
+          : 'bg-a2p-accent text-white hover:bg-a2p-accent-hover'
       } ${className}`}
     >
       {copied ? '✓ Copié' : 'Copier le lien'}

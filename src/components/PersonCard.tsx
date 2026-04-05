@@ -97,10 +97,10 @@ export default function PersonCard({
   return (
     <>
       <div
-        className={`bg-it2p-surface border ${
-          person.isActive ? 'border-it2p-sand/30' : 'border-it2p-sand/50 bg-it2p-sand/5'
+        className={`bg-a2p-surface border ${
+          person.isActive ? 'border-a2p-sand/30' : 'border-a2p-sand/50 bg-a2p-sand/5'
         } rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow ${
-          selectionMode && isSelected ? 'ring-2 ring-it2p-accent' : ''
+          selectionMode && isSelected ? 'ring-2 ring-a2p-accent' : ''
         }`}
       >
         <div className="flex items-start justify-between mb-3">
@@ -110,27 +110,27 @@ export default function PersonCard({
                 type="checkbox"
                 checked={isSelected}
                 onChange={(e) => onSelectionChange?.(e.target.checked)}
-                className="mt-1 w-4 h-4 text-it2p-accent border-it2p-sand rounded focus:ring-it2p-accent"
+                className="mt-1 w-4 h-4 text-a2p-accent border-a2p-sand rounded focus:ring-a2p-accent"
               />
             )}
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-it2p-text mb-1">
+              <h3 className="text-lg font-semibold text-a2p-text mb-1">
                 {person.firstName} {person.lastName}
                 {!person.isActive && (
-                  <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-it2p-coming-soon/20 text-it2p-text-secondary border border-it2p-coming-soon/30">
+                  <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-a2p-coming-soon/20 text-a2p-text-secondary border border-a2p-coming-soon/30">
                     Désactivé
                   </span>
                 )}
               </h3>
               {person.email && (
-                <p className="text-sm text-it2p-text-secondary mb-1">
+                <p className="text-sm text-a2p-text-secondary mb-1">
                   {person.email}
                 </p>
               )}
-              <p className="text-sm text-it2p-text-secondary">
+              <p className="text-sm text-a2p-text-secondary">
                 Créé le {formatDate(person.createdAt)}
               </p>
-              <p className="text-sm text-it2p-text-secondary">
+              <p className="text-sm text-a2p-text-secondary">
                 {person._count?.sessions || 0} session(s)
               </p>
             </div>
@@ -139,7 +139,7 @@ export default function PersonCard({
             <div className="flex items-center gap-2">
               <button
                 onClick={onEditClick}
-                className="p-1.5 text-it2p-text-secondary hover:text-it2p-text transition-colors"
+                className="p-1.5 text-a2p-text-secondary hover:text-a2p-text transition-colors"
                 title="Modifier"
               >
                 <svg
@@ -159,7 +159,7 @@ export default function PersonCard({
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="p-1.5 text-it2p-text-secondary hover:text-it2p-error transition-colors"
+                className="p-1.5 text-a2p-text-secondary hover:text-a2p-error transition-colors"
                 title="Supprimer"
               >
                 <svg
@@ -188,8 +188,8 @@ export default function PersonCard({
               disabled={isToggling}
               className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
                 person.isActive
-                  ? 'bg-it2p-warning/10 text-it2p-warning hover:bg-it2p-warning/20 border border-it2p-warning/30'
-                  : 'bg-it2p-success/10 text-it2p-success hover:bg-it2p-success/20 border border-it2p-success/30'
+                  ? 'bg-a2p-warning/10 text-a2p-warning hover:bg-a2p-warning/20 border border-a2p-warning/30'
+                  : 'bg-a2p-success/10 text-a2p-success hover:bg-a2p-success/20 border border-a2p-success/30'
               }`}
             >
               {isToggling ? 'Traitement...' : person.isActive ? 'Désactiver' : 'Réactiver'}
@@ -205,20 +205,20 @@ export default function PersonCard({
           onClick={() => !isDeleting && setShowDeleteConfirm(false)}
         >
           <div
-            className="bg-it2p-surface rounded-lg shadow-xl max-w-md w-full p-6"
+            className="bg-a2p-surface rounded-lg shadow-xl max-w-md w-full p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-serif font-bold text-it2p-text mb-4">
+            <h3 className="text-xl font-serif font-bold text-a2p-text mb-4">
               Confirmer la suppression
             </h3>
-            <p className="text-it2p-text-secondary mb-6">
+            <p className="text-a2p-text-secondary mb-6">
               Êtes-vous sûr de vouloir supprimer{' '}
               <strong>
                 {person.firstName} {person.lastName}
               </strong>
               ?
               {person._count && person._count.sessions > 0 && (
-                <span className="block mt-2 text-it2p-error text-sm">
+                <span className="block mt-2 text-a2p-error text-sm">
                   Cette personne a {person._count.sessions} session(s) associée(s). La suppression
                   échouera.
                 </span>
@@ -228,14 +228,14 @@ export default function PersonCard({
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isDeleting}
-                className="px-4 py-2 text-sm font-medium text-it2p-text-secondary hover:text-it2p-text transition-colors"
+                className="px-4 py-2 text-sm font-medium text-a2p-text-secondary hover:text-a2p-text transition-colors"
               >
                 Annuler
               </button>
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="px-4 py-2 text-sm font-medium bg-it2p-error text-white rounded hover:bg-it2p-error/80 transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-sm font-medium bg-a2p-error text-white rounded hover:bg-a2p-error/80 transition-colors disabled:opacity-50"
               >
                 {isDeleting ? 'Suppression...' : 'Supprimer'}
               </button>

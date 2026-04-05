@@ -174,61 +174,61 @@ export default function SessionCreateModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-it2p-surface rounded-lg shadow-xl max-w-md w-full">
+      <div className="bg-a2p-surface rounded-lg shadow-xl max-w-md w-full">
         <div className="p-6">
-          <h2 className="text-2xl font-serif font-bold text-it2p-text mb-4">
+          <h2 className="text-2xl font-serif font-bold text-a2p-text mb-4">
             Nouvelle session
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="personId" className="block text-sm font-medium text-it2p-text mb-1">
-                Coaché <span className="text-it2p-error">*</span>
+              <label htmlFor="personId" className="block text-sm font-medium text-a2p-text mb-1">
+                Coaché <span className="text-a2p-error">*</span>
               </label>
               {loadingPersons ? (
-                <div className="w-full px-3 py-2 border border-it2p-sand/50 rounded bg-gray-50 text-it2p-text-secondary">
+                <div className="w-full px-3 py-2 border border-a2p-sand/50 rounded bg-gray-50 text-a2p-text-secondary">
                   Chargement...
                 </div>
               ) : showNewPersonForm ? (
-                <div className="space-y-3 p-4 border border-it2p-sand/50 rounded bg-gray-50">
+                <div className="space-y-3 p-4 border border-a2p-sand/50 rounded bg-gray-50">
                   <div>
-                    <label htmlFor="newPersonFirstName" className="block text-sm font-medium text-it2p-text mb-1">
-                      Prénom <span className="text-it2p-error">*</span>
+                    <label htmlFor="newPersonFirstName" className="block text-sm font-medium text-a2p-text mb-1">
+                      Prénom <span className="text-a2p-error">*</span>
                     </label>
                     <input
                       id="newPersonFirstName"
                       type="text"
                       value={newPersonFirstName}
                       onChange={(e) => setNewPersonFirstName(e.target.value)}
-                      className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                      className="w-full px-3 py-2 border border-a2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-a2p-accent"
                       placeholder="Ex: Marie"
                       disabled={loading}
                     />
                   </div>
                   <div>
-                    <label htmlFor="newPersonLastName" className="block text-sm font-medium text-it2p-text mb-1">
-                      Nom <span className="text-it2p-error">*</span>
+                    <label htmlFor="newPersonLastName" className="block text-sm font-medium text-a2p-text mb-1">
+                      Nom <span className="text-a2p-error">*</span>
                     </label>
                     <input
                       id="newPersonLastName"
                       type="text"
                       value={newPersonLastName}
                       onChange={(e) => setNewPersonLastName(e.target.value)}
-                      className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                      className="w-full px-3 py-2 border border-a2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-a2p-accent"
                       placeholder="Ex: Dupont"
                       disabled={loading}
                     />
                   </div>
                   <div>
-                    <label htmlFor="newPersonEmail" className="block text-sm font-medium text-it2p-text mb-1">
-                      Email <span className="text-it2p-text-secondary font-normal">(optionnel)</span>
+                    <label htmlFor="newPersonEmail" className="block text-sm font-medium text-a2p-text mb-1">
+                      Email <span className="text-a2p-text-secondary font-normal">(optionnel)</span>
                     </label>
                     <input
                       id="newPersonEmail"
                       type="email"
                       value={newPersonEmail}
                       onChange={(e) => setNewPersonEmail(e.target.value)}
-                      className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                      className="w-full px-3 py-2 border border-a2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-a2p-accent"
                       placeholder="marie.dupont@example.com"
                       disabled={loading}
                     />
@@ -237,7 +237,7 @@ export default function SessionCreateModal({
                     <button
                       type="button"
                       onClick={handleCreatePerson}
-                      className="px-3 py-1.5 text-sm font-medium bg-it2p-accent text-white rounded hover:bg-it2p-accent-hover transition-colors disabled:opacity-50"
+                      className="px-3 py-1.5 text-sm font-medium bg-a2p-accent text-white rounded hover:bg-a2p-accent-hover transition-colors disabled:opacity-50"
                       disabled={loading}
                     >
                       {loading ? 'Création...' : 'Créer'}
@@ -251,7 +251,7 @@ export default function SessionCreateModal({
                         setNewPersonEmail('')
                         setError('')
                       }}
-                      className="px-3 py-1.5 text-sm font-medium text-it2p-text-secondary hover:text-it2p-text transition-colors"
+                      className="px-3 py-1.5 text-sm font-medium text-a2p-text-secondary hover:text-a2p-text transition-colors"
                       disabled={loading}
                     >
                       Annuler
@@ -264,7 +264,7 @@ export default function SessionCreateModal({
                     id="personId"
                     value={personId}
                     onChange={(e) => setPersonId(e.target.value)}
-                    className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                    className="w-full px-3 py-2 border border-a2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-a2p-accent"
                     required
                   >
                     <option value="">Sélectionnez un coaché</option>
@@ -278,7 +278,7 @@ export default function SessionCreateModal({
                   <button
                     type="button"
                     onClick={() => setShowNewPersonForm(true)}
-                    className="text-sm text-it2p-accent hover:text-it2p-accent-hover transition-colors font-medium"
+                    className="text-sm text-a2p-accent hover:text-a2p-accent-hover transition-colors font-medium"
                   >
                     + Créer un nouveau coaché
                   </button>
@@ -287,22 +287,22 @@ export default function SessionCreateModal({
             </div>
 
             <div>
-              <label htmlFor="context" className="block text-sm font-medium text-it2p-text mb-1">
-                Description <span className="text-it2p-error">*</span>
+              <label htmlFor="context" className="block text-sm font-medium text-a2p-text mb-1">
+                Description <span className="text-a2p-error">*</span>
               </label>
               <input
                 id="context"
                 type="text"
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
-                className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                className="w-full px-3 py-2 border border-a2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-a2p-accent"
                 placeholder="Ex: Recrutement, Accompagnement managérial"
                 required
               />
             </div>
 
             {error && (
-              <div className="bg-it2p-error/10 border border-it2p-error/20 text-it2p-error px-3 py-2 rounded text-sm">
+              <div className="bg-a2p-error/10 border border-a2p-error/20 text-a2p-error px-3 py-2 rounded text-sm">
                 {error}
               </div>
             )}
@@ -311,14 +311,14 @@ export default function SessionCreateModal({
               <button
                 type="button"
                 onClick={handleClose}
-                className="px-4 py-2 text-sm font-medium text-it2p-text-secondary hover:text-it2p-text transition-colors"
+                className="px-4 py-2 text-sm font-medium text-a2p-text-secondary hover:text-a2p-text transition-colors"
                 disabled={loading}
               >
                 Annuler
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-sm font-medium bg-it2p-accent text-white rounded hover:bg-it2p-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm font-medium bg-a2p-accent text-white rounded hover:bg-a2p-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={loading || loadingPersons || showNewPersonForm}
               >
                 {loading ? 'Création...' : 'Créer la session'}

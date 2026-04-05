@@ -135,16 +135,16 @@ export default function PersonsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-it2p-text">
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-a2p-text">
               Gestion des coachés
             </h1>
-            <p className="text-sm text-it2p-text-secondary mt-1">
+            <p className="text-sm text-a2p-text-secondary mt-1">
               Gérez vos coachés et leurs informations
             </p>
           </div>
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="px-4 sm:px-6 py-2.5 bg-it2p-accent text-white rounded-lg hover:bg-it2p-accent-hover transition-colors text-sm sm:text-base font-medium"
+            className="px-4 sm:px-6 py-2.5 bg-a2p-accent text-white rounded-lg hover:bg-a2p-accent-hover transition-colors text-sm sm:text-base font-medium"
           >
             + Nouveau coaché
           </button>
@@ -157,8 +157,8 @@ export default function PersonsPage() {
               onClick={() => setFilter('active')}
               className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
                 filter === 'active'
-                  ? 'bg-it2p-accent text-white'
-                  : 'bg-it2p-surface border border-it2p-sand/30 text-it2p-text hover:bg-it2p-sand-light'
+                  ? 'bg-a2p-accent text-white'
+                  : 'bg-a2p-surface border border-a2p-sand/30 text-a2p-text hover:bg-a2p-sand-light'
               }`}
             >
               Actifs ({activePersonsCount})
@@ -167,8 +167,8 @@ export default function PersonsPage() {
               onClick={() => setFilter('inactive')}
               className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
                 filter === 'inactive'
-                  ? 'bg-it2p-accent text-white'
-                  : 'bg-it2p-surface border border-it2p-sand/30 text-it2p-text hover:bg-it2p-sand-light'
+                  ? 'bg-a2p-accent text-white'
+                  : 'bg-a2p-surface border border-a2p-sand/30 text-a2p-text hover:bg-a2p-sand-light'
               }`}
             >
               Désactivés ({inactivePersonsCount})
@@ -177,8 +177,8 @@ export default function PersonsPage() {
               onClick={() => setFilter('all')}
               className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
                 filter === 'all'
-                  ? 'bg-it2p-accent text-white'
-                  : 'bg-it2p-surface border border-it2p-sand/30 text-it2p-text hover:bg-it2p-sand-light'
+                  ? 'bg-a2p-accent text-white'
+                  : 'bg-a2p-surface border border-a2p-sand/30 text-a2p-text hover:bg-a2p-sand-light'
               }`}
             >
               Tous ({persons.length})
@@ -190,7 +190,7 @@ export default function PersonsPage() {
               <button
                 onClick={() => setSelectionMode(true)}
                 disabled={activePersonsCount === 0}
-                className="px-4 py-2 text-sm font-medium bg-it2p-surface border border-it2p-sand/30 text-it2p-text rounded hover:bg-it2p-sand-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm font-medium bg-a2p-surface border border-a2p-sand/30 text-a2p-text rounded hover:bg-a2p-sand-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Sélection multiple
               </button>
@@ -198,14 +198,14 @@ export default function PersonsPage() {
               <>
                 <button
                   onClick={handleSelectAll}
-                  className="px-4 py-2 text-sm font-medium bg-it2p-surface border border-it2p-sand/30 text-it2p-text rounded hover:bg-it2p-sand-light transition-colors"
+                  className="px-4 py-2 text-sm font-medium bg-a2p-surface border border-a2p-sand/30 text-a2p-text rounded hover:bg-a2p-sand-light transition-colors"
                 >
                   {selectedPersonIds.size === activePersonsCount ? 'Tout désélectionner' : 'Tout sélectionner'}
                 </button>
                 <button
                   onClick={handleBulkDeactivate}
                   disabled={selectedPersonIds.size === 0 || isBulkDeactivating}
-                  className="px-4 py-2 text-sm font-medium bg-it2p-warning text-white rounded hover:bg-it2p-warning/80 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 text-sm font-medium bg-a2p-warning text-white rounded hover:bg-a2p-warning/80 transition-colors disabled:opacity-50"
                 >
                   {isBulkDeactivating
                     ? 'Désactivation...'
@@ -216,7 +216,7 @@ export default function PersonsPage() {
                     setSelectionMode(false)
                     setSelectedPersonIds(new Set())
                   }}
-                  className="px-4 py-2 text-sm font-medium text-it2p-text-secondary hover:text-it2p-text transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-a2p-text-secondary hover:text-a2p-text transition-colors"
                 >
                   Annuler
                 </button>
@@ -228,28 +228,28 @@ export default function PersonsPage() {
         {/* Loading State */}
         {loading && (
           <div className="text-center py-12">
-            <div className="inline-block w-8 h-8 border-4 border-it2p-accent border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-it2p-text-secondary">Chargement des coachés...</p>
+            <div className="inline-block w-8 h-8 border-4 border-a2p-accent border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-4 text-a2p-text-secondary">Chargement des coachés...</p>
           </div>
         )}
 
         {/* Error State */}
         {error && (
-          <div className="bg-it2p-error/10 border border-it2p-error/20 text-it2p-error px-4 py-3 rounded">
+          <div className="bg-a2p-error/10 border border-a2p-error/20 text-a2p-error px-4 py-3 rounded">
             {error}
           </div>
         )}
 
         {/* Empty State */}
         {!loading && !error && persons.length === 0 && (
-          <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-8 text-center">
+          <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-8 text-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-16 h-16 mx-auto text-it2p-text-secondary mb-4"
+              className="w-16 h-16 mx-auto text-a2p-text-secondary mb-4"
             >
               <path
                 strokeLinecap="round"
@@ -257,12 +257,12 @@ export default function PersonsPage() {
                 d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
               />
             </svg>
-            <h3 className="text-lg font-semibold text-it2p-text mb-2">
+            <h3 className="text-lg font-semibold text-a2p-text mb-2">
               {filter === 'active' && 'Aucun coaché actif'}
               {filter === 'inactive' && 'Aucun coaché désactivé'}
               {filter === 'all' && 'Aucun coaché'}
             </h3>
-            <p className="text-it2p-text-secondary mb-4">
+            <p className="text-a2p-text-secondary mb-4">
               {filter === 'all'
                 ? 'Commencez par créer votre premier coaché'
                 : "Essayez de changer le filtre pour voir d'autres coachés"}
@@ -270,7 +270,7 @@ export default function PersonsPage() {
             {filter === 'all' && (
               <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="px-6 py-2.5 bg-it2p-accent text-white rounded-lg hover:bg-it2p-accent-hover transition-colors font-medium"
+                className="px-6 py-2.5 bg-a2p-accent text-white rounded-lg hover:bg-a2p-accent-hover transition-colors font-medium"
               >
                 + Créer un coaché
               </button>
