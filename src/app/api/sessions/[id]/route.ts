@@ -143,7 +143,7 @@ export async function DELETE(
 
 /**
  * PATCH /api/sessions/[id]
- * Update session metadata (coacheeName, context)
+ * Update session metadata (personId, context)
  */
 export async function PATCH(
   request: NextRequest,
@@ -197,14 +197,46 @@ export async function PATCH(
 
     // Get update data from request body
     const body = await request.json()
-    const { coacheeName, context } = body
+    const { context, personId } = body
+
+    // Validate required field
+    if (!context || !context.trim()) {
+      return NextResponse.json(
+        { error: 'La description est obligatoire' },
+        { status: 400 }
+      )
+    }
+
+    // If personId is being changed, verify it belongs to this practitioner
+    if (personId && personId !== sessionData.personId) {
+      const person = await prisma.person.findUnique({
+        where: { id: personId },
+      })
+
+      if (!person) {
+        return NextResponse.json(
+          { error: 'Personne non trouvée' },
+          { status: 404 }
+        )
+      }
+
+      if (person.practitionerId !== practitioner.id) {
+        return NextResponse.json(
+          { error: 'Accès non autorisé' },
+          { status: 403 }
+        )
+      }
+    }
 
     // Update session
     const updatedSession = await prisma.session.update({
       where: { id },
       data: {
-        coacheeName: coacheeName?.trim() || null,
-        context: context?.trim() || null,
+        ...(personId && { personId }),
+        context: context.trim(),
+      },
+      include: {
+        person: true,
       },
     })
 

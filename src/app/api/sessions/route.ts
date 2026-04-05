@@ -93,27 +93,40 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json()
-    const { personId, coacheeName, context } = body
+    const { personId, context } = body
 
-    // If personId is provided, verify it belongs to this practitioner
-    if (personId) {
-      const person = await prisma.person.findUnique({
-        where: { id: personId },
-      })
+    // Validate required fields
+    if (!personId) {
+      return NextResponse.json(
+        { error: 'La sélection d\'une personne est obligatoire' },
+        { status: 400 }
+      )
+    }
 
-      if (!person) {
-        return NextResponse.json(
-          { error: 'Personne non trouvée' },
-          { status: 404 }
-        )
-      }
+    if (!context || !context.trim()) {
+      return NextResponse.json(
+        { error: 'La description est obligatoire' },
+        { status: 400 }
+      )
+    }
 
-      if (person.practitionerId !== practitioner.id) {
-        return NextResponse.json(
-          { error: 'Accès non autorisé' },
-          { status: 403 }
-        )
-      }
+    // Verify personId belongs to this practitioner
+    const person = await prisma.person.findUnique({
+      where: { id: personId },
+    })
+
+    if (!person) {
+      return NextResponse.json(
+        { error: 'Personne non trouvée' },
+        { status: 404 }
+      )
+    }
+
+    if (person.practitionerId !== practitioner.id) {
+      return NextResponse.json(
+        { error: 'Accès non autorisé' },
+        { status: 403 }
+      )
     }
 
     // Generate unique token and set expiration to 48h from now
@@ -121,15 +134,14 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date()
     expiresAt.setHours(expiresAt.getHours() + 48)
 
-    // Create session with either personId or coacheeName
+    // Create session with personId and context
     const newSession = await prisma.session.create({
       data: {
         token,
         practitionerId: practitioner.id,
-        personId: personId || null,
+        personId: personId,
         status: 'PENDING',
-        coacheeName: coacheeName?.trim() || null,
-        context: context?.trim() || null,
+        context: context.trim(),
         expiresAt,
       },
       include: {

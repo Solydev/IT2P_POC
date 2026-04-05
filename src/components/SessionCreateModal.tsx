@@ -1,9 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useToast } from './ToastProvider'
 
 const MODAL_CLOSE_DELAY_MS = 500
+
+interface Person {
+  id: string
+  firstName: string
+  lastName: string
+  email: string | null
+}
 
 interface SessionCreateModalProps {
   isOpen: boolean
@@ -16,22 +23,111 @@ export default function SessionCreateModal({
   onClose,
   onSessionCreated,
 }: SessionCreateModalProps) {
-  const [coacheeName, setCoacheeName] = useState('')
+  const [personId, setPersonId] = useState('')
   const [context, setContext] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [persons, setPersons] = useState<Person[]>([])
+  const [loadingPersons, setLoadingPersons] = useState(false)
+  const [showNewPersonForm, setShowNewPersonForm] = useState(false)
+  const [newPersonFirstName, setNewPersonFirstName] = useState('')
+  const [newPersonLastName, setNewPersonLastName] = useState('')
+  const [newPersonEmail, setNewPersonEmail] = useState('')
   const { showToast } = useToast()
+
+  // Fetch persons when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      fetchPersons()
+    }
+  }, [isOpen])
+
+  const fetchPersons = async () => {
+    setLoadingPersons(true)
+    try {
+      const response = await fetch('/api/persons')
+      const data = await response.json()
+      
+      if (response.ok) {
+        setPersons(data.persons || [])
+      } else {
+        console.error('Failed to fetch persons:', data.error)
+      }
+    } catch (err) {
+      console.error('Error fetching persons:', err)
+    } finally {
+      setLoadingPersons(false)
+    }
+  }
+
+  const handleCreatePerson = async () => {
+    setError('')
+    
+    // Validate new person fields
+    if (!newPersonFirstName.trim() || !newPersonLastName.trim()) {
+      setError('Le prénom et le nom sont requis')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const response = await fetch('/api/persons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: newPersonFirstName,
+          lastName: newPersonLastName,
+          email: newPersonEmail || null,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erreur lors de la création de la personne')
+      }
+
+      // Add the new person to the list and select them
+      setPersons([...persons, data.person])
+      setPersonId(data.person.id)
+      
+      // Reset new person form
+      setNewPersonFirstName('')
+      setNewPersonLastName('')
+      setNewPersonEmail('')
+      setShowNewPersonForm(false)
+      
+      showToast('Personne créée avec succès', 'success')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur lors de la création de la personne')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    // Client-side validation
+    if (!personId) {
+      setError('Veuillez sélectionner une personne')
+      return
+    }
+
+    if (!context.trim()) {
+      setError('La description est obligatoire')
+      return
+    }
+
     setLoading(true)
 
     try {
       const response = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coacheeName, context }),
+        body: JSON.stringify({ personId, context }),
       })
 
       const data = await response.json()
@@ -64,9 +160,13 @@ export default function SessionCreateModal({
   }
 
   const handleClose = () => {
-    setCoacheeName('')
+    setPersonId('')
     setContext('')
     setError('')
+    setShowNewPersonForm(false)
+    setNewPersonFirstName('')
+    setNewPersonLastName('')
+    setNewPersonEmail('')
     onClose()
   }
 
@@ -82,24 +182,113 @@ export default function SessionCreateModal({
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="coacheeName" className="block text-sm font-medium text-it2p-text mb-1">
-                Nom du coaché
-                <span className="text-it2p-text-secondary font-normal ml-1">(optionnel)</span>
+              <label htmlFor="personId" className="block text-sm font-medium text-it2p-text mb-1">
+                Coaché <span className="text-it2p-error">*</span>
               </label>
-              <input
-                id="coacheeName"
-                type="text"
-                value={coacheeName}
-                onChange={(e) => setCoacheeName(e.target.value)}
-                className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
-                placeholder="Ex: Marie Dupont"
-              />
+              {loadingPersons ? (
+                <div className="w-full px-3 py-2 border border-it2p-sand/50 rounded bg-gray-50 text-it2p-text-secondary">
+                  Chargement...
+                </div>
+              ) : showNewPersonForm ? (
+                <div className="space-y-3 p-4 border border-it2p-sand/50 rounded bg-gray-50">
+                  <div>
+                    <label htmlFor="newPersonFirstName" className="block text-sm font-medium text-it2p-text mb-1">
+                      Prénom <span className="text-it2p-error">*</span>
+                    </label>
+                    <input
+                      id="newPersonFirstName"
+                      type="text"
+                      value={newPersonFirstName}
+                      onChange={(e) => setNewPersonFirstName(e.target.value)}
+                      className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                      placeholder="Ex: Marie"
+                      disabled={loading}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="newPersonLastName" className="block text-sm font-medium text-it2p-text mb-1">
+                      Nom <span className="text-it2p-error">*</span>
+                    </label>
+                    <input
+                      id="newPersonLastName"
+                      type="text"
+                      value={newPersonLastName}
+                      onChange={(e) => setNewPersonLastName(e.target.value)}
+                      className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                      placeholder="Ex: Dupont"
+                      disabled={loading}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="newPersonEmail" className="block text-sm font-medium text-it2p-text mb-1">
+                      Email <span className="text-it2p-text-secondary font-normal">(optionnel)</span>
+                    </label>
+                    <input
+                      id="newPersonEmail"
+                      type="email"
+                      value={newPersonEmail}
+                      onChange={(e) => setNewPersonEmail(e.target.value)}
+                      className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                      placeholder="marie.dupont@example.com"
+                      disabled={loading}
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleCreatePerson}
+                      className="px-3 py-1.5 text-sm font-medium bg-it2p-accent text-white rounded hover:bg-it2p-accent-hover transition-colors disabled:opacity-50"
+                      disabled={loading}
+                    >
+                      {loading ? 'Création...' : 'Créer'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowNewPersonForm(false)
+                        setNewPersonFirstName('')
+                        setNewPersonLastName('')
+                        setNewPersonEmail('')
+                        setError('')
+                      }}
+                      className="px-3 py-1.5 text-sm font-medium text-it2p-text-secondary hover:text-it2p-text transition-colors"
+                      disabled={loading}
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <select
+                    id="personId"
+                    value={personId}
+                    onChange={(e) => setPersonId(e.target.value)}
+                    className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
+                    required
+                  >
+                    <option value="">Sélectionnez un coaché</option>
+                    {persons.map((person) => (
+                      <option key={person.id} value={person.id}>
+                        {person.firstName} {person.lastName}
+                        {person.email && ` (${person.email})`}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPersonForm(true)}
+                    className="text-sm text-it2p-accent hover:text-it2p-accent-hover transition-colors font-medium"
+                  >
+                    + Créer un nouveau coaché
+                  </button>
+                </div>
+              )}
             </div>
 
             <div>
               <label htmlFor="context" className="block text-sm font-medium text-it2p-text mb-1">
-                Contexte
-                <span className="text-it2p-text-secondary font-normal ml-1">(optionnel)</span>
+                Description <span className="text-it2p-error">*</span>
               </label>
               <input
                 id="context"
@@ -108,6 +297,7 @@ export default function SessionCreateModal({
                 onChange={(e) => setContext(e.target.value)}
                 className="w-full px-3 py-2 border border-it2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-it2p-accent"
                 placeholder="Ex: Recrutement, Accompagnement managérial"
+                required
               />
             </div>
 
@@ -129,7 +319,7 @@ export default function SessionCreateModal({
               <button
                 type="submit"
                 className="px-4 py-2 text-sm font-medium bg-it2p-accent text-white rounded hover:bg-it2p-accent-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={loading}
+                disabled={loading || loadingPersons || showNewPersonForm}
               >
                 {loading ? 'Création...' : 'Créer la session'}
               </button>

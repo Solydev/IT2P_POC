@@ -11,9 +11,14 @@ interface SessionCardProps {
   session: {
     id: string
     token: string
+    personId: string
+    person?: {
+      firstName: string
+      lastName: string
+      email: string | null
+    }
     status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'EXPIRED'
-    coacheeName: string | null
-    context: string | null
+    context: string
     createdAt: string
     expiresAt?: string | null
     completedAt?: string | null
@@ -68,7 +73,10 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
     }
   }
 
-  const displayName = session.coacheeName || <span className="italic text-it2p-text-secondary">Non renseigné</span>
+  const displayName = session.person 
+    ? `${session.person.firstName} ${session.person.lastName}`
+    : <span className="italic text-it2p-text-secondary">Non renseigné</span>
+  const displayContext = session.context || <span className="italic text-it2p-text-secondary">Aucune description</span>
 
   return (
     <>
@@ -78,11 +86,9 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
             <h3 className="text-lg font-semibold text-it2p-text mb-1">
               {displayName}
             </h3>
-            {session.context && (
-              <p className="text-sm text-it2p-text-secondary">
-                {session.context}
-              </p>
-            )}
+            <p className="text-sm text-it2p-text-secondary">
+              {displayContext}
+            </p>
             <p className="text-sm text-it2p-text-secondary">
               Créé le {formatDate(session.createdAt)}
             </p>
