@@ -29,7 +29,7 @@ export default function CustomizationPage() {
             Personnalisation
           </h1>
           <p className="text-sm sm:text-base text-a2p-text-secondary">
-            Adaptez l'apparence des rapports et des emails envoyés à vos coachés
+            Adaptez l&apos;apparence des rapports et des emails envoyés à vos coachés
           </p>
         </div>
 
@@ -149,7 +149,7 @@ export default function CustomizationPage() {
           <div className="lg:col-span-2">
             <div className="sticky top-6">
               <p className="text-xs font-medium text-a2p-text-secondary uppercase tracking-wide mb-3">
-                Aperçu — Email d'invitation
+                Aperçu — Email d&apos;invitation
               </p>
               <div className="bg-white border border-a2p-sand/40 rounded-xl overflow-hidden shadow-md text-xs">
                 {/* Email header */}

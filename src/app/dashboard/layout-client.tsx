@@ -56,7 +56,7 @@ export default function DashboardLayoutClient({
             <p className="text-xs text-a2p-text-secondary mt-1">
               Analyse de la Personnalité Professionnelle
             </p>
-          </Link>
+          </div>
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-1">
