@@ -21,9 +21,9 @@ export default function Toast({
   }, [onClose, duration])
 
   const bgColor = {
-    success: 'bg-it2p-success',
-    error: 'bg-it2p-error',
-    info: 'bg-it2p-accent',
+    success: 'bg-a2p-success',
+    error: 'bg-a2p-error',
+    info: 'bg-a2p-accent',
   }[type]
 
   const icon = {

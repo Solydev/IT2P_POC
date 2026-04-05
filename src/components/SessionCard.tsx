@@ -75,21 +75,21 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
 
   const displayName = session.person 
     ? `${session.person.firstName} ${session.person.lastName}`
-    : <span className="italic text-it2p-text-secondary">Non renseigné</span>
-  const displayContext = session.context || <span className="italic text-it2p-text-secondary">Aucune description</span>
+    : <span className="italic text-a2p-text-secondary">Non renseigné</span>
+  const displayContext = session.context || <span className="italic text-a2p-text-secondary">Aucune description</span>
 
   return (
     <>
-      <div className="bg-it2p-surface border border-it2p-sand/30 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow">
+      <div className="bg-a2p-surface border border-a2p-sand/30 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-it2p-text mb-1">
+            <h3 className="text-lg font-semibold text-a2p-text mb-1">
               {displayName}
             </h3>
-            <p className="text-sm text-it2p-text-secondary">
+            <p className="text-sm text-a2p-text-secondary">
               {displayContext}
             </p>
-            <p className="text-sm text-it2p-text-secondary">
+            <p className="text-sm text-a2p-text-secondary">
               Créé le {formatDate(session.createdAt)}
             </p>
           </div>
@@ -97,7 +97,7 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
             <StatusBadge status={session.status} />
             <button
               onClick={() => setIsEditModalOpen(true)}
-              className="p-1.5 text-it2p-text-secondary hover:text-it2p-text transition-colors"
+              className="p-1.5 text-a2p-text-secondary hover:text-a2p-text transition-colors"
               title="Modifier"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -106,7 +106,7 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
             </button>
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="p-1.5 text-it2p-error hover:text-it2p-error/80 transition-colors"
+              className="p-1.5 text-a2p-error hover:text-a2p-error/80 transition-colors"
               title="Supprimer"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -118,22 +118,22 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
 
         <div className="space-y-2 mb-4">
           {session.expiresAt && session.status !== 'EXPIRED' && session.status !== 'COMPLETED' && (
-            <p className="text-sm text-it2p-text-secondary">
+            <p className="text-sm text-a2p-text-secondary">
               <span className="font-medium">Expire le:</span> {formatDate(session.expiresAt)}
             </p>
           )}
           {session.completedAt && (
-            <p className="text-sm text-it2p-text-secondary">
+            <p className="text-sm text-a2p-text-secondary">
               <span className="font-medium">Complété le:</span> {formatDate(session.completedAt)}
             </p>
           )}
           {session._count && session._count.answers > 0 && session.status === 'IN_PROGRESS' && (
-            <p className="text-sm text-it2p-text-secondary">
+            <p className="text-sm text-a2p-text-secondary">
               <span className="font-medium">Réponses:</span> {session._count.answers}/14
             </p>
           )}
           {session.result && (
-            <p className="text-sm text-it2p-text-secondary">
+            <p className="text-sm text-a2p-text-secondary">
               <span className="font-medium">Profil:</span> {session.result.profileCode}
             </p>
           )}
@@ -146,7 +146,7 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
           {session.status === 'COMPLETED' && session.result && (
             <Link
               href={`/dashboard/session/${session.id}`}
-              className="px-3 py-1.5 text-sm font-medium bg-it2p-accent text-white rounded hover:bg-it2p-accent-hover transition-colors"
+              className="px-3 py-1.5 text-sm font-medium bg-a2p-accent text-white rounded hover:bg-a2p-accent-hover transition-colors"
             >
               Voir le bilan
             </Link>
@@ -168,24 +168,24 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-it2p-surface rounded-lg shadow-xl max-w-md w-full p-6">
-            <h3 className="text-xl font-serif font-bold text-it2p-text mb-3">
+          <div className="bg-a2p-surface rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 className="text-xl font-serif font-bold text-a2p-text mb-3">
               Confirmer la suppression
             </h3>
-            <p className="text-it2p-text-secondary mb-4">
+            <p className="text-a2p-text-secondary mb-4">
               Êtes-vous sûr de vouloir supprimer cette session ? Cette action est irréversible.
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-4 py-2 text-sm font-medium text-it2p-text-secondary hover:text-it2p-text transition-colors"
+                className="px-4 py-2 text-sm font-medium text-a2p-text-secondary hover:text-a2p-text transition-colors"
                 disabled={isDeleting}
               >
                 Annuler
               </button>
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 text-sm font-medium bg-it2p-error text-white rounded hover:bg-it2p-error/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm font-medium bg-a2p-error text-white rounded hover:bg-a2p-error/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isDeleting}
               >
                 {isDeleting ? 'Suppression...' : 'Supprimer'}
