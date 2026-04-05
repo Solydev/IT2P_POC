@@ -26,6 +26,7 @@ model Person {
   firstName      String
   lastName       String
   email          String?
+  isActive       Boolean      @default(true)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   sessions       Session[]

@@ -71,6 +71,17 @@ export default function DashboardLayoutClient({
               Mes sessions
             </Link>
 
+            <Link
+              href="/dashboard/persons"
+              className={`block px-4 py-2.5 rounded transition-colors ${
+                pathname?.startsWith('/dashboard/persons')
+                  ? 'bg-it2p-accent text-white'
+                  : 'text-it2p-text hover:bg-it2p-sand-light'
+              }`}
+            >
+              Gestion des coachés
+            </Link>
+
             <ComingSoon inline>
               <button
                 disabled
