@@ -167,7 +167,7 @@ export default function DashboardLayoutClient({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <h1 className="text-xl font-serif font-bold text-a2p-accent absolute left-1/2 -translate-x-1/2">A2P</h1>
+            <Link href="/dashboard" className="text-xl font-serif font-bold text-a2p-accent absolute left-1/2 -translate-x-1/2">A2P</Link>
           </div>
           
           {children}
