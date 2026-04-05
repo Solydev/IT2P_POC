@@ -18,6 +18,7 @@ async function main() {
   await prisma.result.deleteMany()
   await prisma.answer.deleteMany()
   await prisma.session.deleteMany()
+  await prisma.person.deleteMany()
   await prisma.practitioner.deleteMany()
 
   console.log('✅ Cleaned existing data')
@@ -33,6 +34,35 @@ async function main() {
   })
 
   console.log('✅ Created practitioner:', practitioner.email)
+
+  // Create persons
+  const jeanDupont = await prisma.person.create({
+    data: {
+      practitionerId: practitioner.id,
+      firstName: 'Jean',
+      lastName: 'Dupont',
+      email: 'jean.dupont@example.com',
+    },
+  })
+
+  const marieMartin = await prisma.person.create({
+    data: {
+      practitionerId: practitioner.id,
+      firstName: 'Marie',
+      lastName: 'Martin',
+      email: 'marie.martin@example.com',
+    },
+  })
+
+  const pierreDubois = await prisma.person.create({
+    data: {
+      practitionerId: practitioner.id,
+      firstName: 'Pierre',
+      lastName: 'Dubois',
+    },
+  })
+
+  console.log('✅ Created persons: Jean Dupont, Marie Martin, Pierre Dubois')
 
   // ────────────────────────────────────────────────────────────────────────────
   // COMPLETED session — real 14-question A2P answers, pre-computed scores
@@ -69,6 +99,7 @@ async function main() {
     data: {
       token: 'completed-demo-token-123',
       practitionerId: practitioner.id,
+      personId: jeanDupont.id,
       status: 'COMPLETED',
       coacheeName: 'Jean Dupont',
       context: 'Accompagnement Managérial',
@@ -101,6 +132,7 @@ async function main() {
     data: {
       token: 'pending-demo-token-456',
       practitionerId: practitioner.id,
+      personId: marieMartin.id,
       status: 'PENDING',
       coacheeName: 'Marie Martin',
       context: 'Recrutement KEOPS',
@@ -115,6 +147,7 @@ async function main() {
     data: {
       token: 'expired-demo-token-789',
       practitionerId: practitioner.id,
+      personId: pierreDubois.id,
       status: 'EXPIRED',
       coacheeName: 'Pierre Dubois',
       context: 'Bilan de compétences',
@@ -129,6 +162,10 @@ async function main() {
 
 📊 Résumé :
   - Praticien  : demo@solydev.fr  /  demo2026
+  - Persons    :
+      • Jean Dupont (jean.dupont@example.com)
+      • Marie Martin (marie.martin@example.com)
+      • Pierre Dubois
   - Sessions   :
       • COMPLETED  completed-demo-token-123  (Jean Dupont — F5 R4 P3 M5)
       • PENDING    pending-demo-token-456    (Marie Martin — lien valide 48 h)

@@ -53,6 +53,14 @@ export default function DashboardPage() {
     fetchSessions()
   }
 
+  const handleSessionUpdated = () => {
+    fetchSessions()
+  }
+
+  const handleSessionDeleted = () => {
+    fetchSessions()
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -113,7 +121,12 @@ export default function DashboardPage() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {sessions.map((session) => (
-              <SessionCard key={session.id} session={session} />
+              <SessionCard 
+                key={session.id} 
+                session={session} 
+                onSessionUpdated={handleSessionUpdated}
+                onSessionDeleted={handleSessionDeleted}
+              />
             ))}
           </div>
         )}
