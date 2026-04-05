@@ -14,7 +14,7 @@ npm run build
 
 echo "==> Syncing .next and migrations to server..."
 rsync -az -e "ssh -i $KEY" .next "$SERVER:/var/www/it2p/"
-rsync -az -e "ssh -i $KEY" prisma/schema.prisma prisma/migrations "$SERVER:/var/www/it2p/prisma/"
+rsync -az -e "ssh -i $KEY" prisma/schema.prisma prisma/migrations prisma/seed.ts "$SERVER:/var/www/it2p/prisma/"
 
 echo "==> Applying migrations + regenerating Prisma client..."
 $SSH "$SERVER" "cd /var/www/it2p && npx prisma migrate deploy && npx prisma generate"

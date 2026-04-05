@@ -229,7 +229,7 @@ export default function AdminPage() {
                 <span className="text-sm text-it2p-text-secondary">jours (par défaut)</span>
               </div>
               <p className="text-xs text-it2p-text-secondary mt-2">
-                Durée par défaut avant expiration d'un lien de questionnaire
+                Durée par défaut avant expiration d&apos;un lien de questionnaire
               </p>
             </div>
 

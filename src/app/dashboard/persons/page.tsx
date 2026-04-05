@@ -21,7 +21,8 @@ export default function PersonsPage() {
   const [persons, setPersons] = useState<Person[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('active')
+  const [filter, setFilter] = useState<'all' | 'active' | 'inactive' | 'with-active-session'>('active')
+  const [counts, setCounts] = useState({ all: 0, active: 0, inactive: 0, withActiveSession: 0 })
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [editingPerson, setEditingPerson] = useState<Person | null>(null)
   const [selectionMode, setSelectionMode] = useState(false)
@@ -40,6 +41,7 @@ export default function PersonsPage() {
       }
 
       setPersons(data.persons || [])
+      if (data.counts) setCounts(data.counts)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue')
     } finally {
@@ -126,8 +128,7 @@ export default function PersonsPage() {
     }
   }
 
-  const activePersonsCount = persons.filter((p) => p.isActive).length
-  const inactivePersonsCount = persons.filter((p) => !p.isActive).length
+  const activePersonsCount = counts.active
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -153,36 +154,24 @@ export default function PersonsPage() {
         {/* Filter and Actions Bar */}
         <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setFilter('active')}
-              className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
-                filter === 'active'
-                  ? 'bg-it2p-accent text-white'
-                  : 'bg-it2p-surface border border-it2p-sand/30 text-it2p-text hover:bg-it2p-sand-light'
-              }`}
-            >
-              Actifs ({activePersonsCount})
-            </button>
-            <button
-              onClick={() => setFilter('inactive')}
-              className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
-                filter === 'inactive'
-                  ? 'bg-it2p-accent text-white'
-                  : 'bg-it2p-surface border border-it2p-sand/30 text-it2p-text hover:bg-it2p-sand-light'
-              }`}
-            >
-              Désactivés ({inactivePersonsCount})
-            </button>
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
-                filter === 'all'
-                  ? 'bg-it2p-accent text-white'
-                  : 'bg-it2p-surface border border-it2p-sand/30 text-it2p-text hover:bg-it2p-sand-light'
-              }`}
-            >
-              Tous ({persons.length})
-            </button>
+            {([
+              { key: 'active', label: 'Actifs', count: counts.active },
+              { key: 'with-active-session', label: 'Session en cours', count: counts.withActiveSession },
+              { key: 'inactive', label: 'Désactivés', count: counts.inactive },
+              { key: 'all', label: 'Tous', count: counts.all },
+            ] as const).map(({ key, label, count }) => (
+              <button
+                key={key}
+                onClick={() => setFilter(key)}
+                className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
+                  filter === key
+                    ? 'bg-it2p-accent text-white'
+                    : 'bg-it2p-surface border border-it2p-sand/30 text-it2p-text hover:bg-it2p-sand-light'
+                }`}
+              >
+                {label} ({count})
+              </button>
+            ))}
           </div>
 
           <div className="flex gap-2">
@@ -260,6 +249,7 @@ export default function PersonsPage() {
             <h3 className="text-lg font-semibold text-it2p-text mb-2">
               {filter === 'active' && 'Aucun coaché actif'}
               {filter === 'inactive' && 'Aucun coaché désactivé'}
+              {filter === 'with-active-session' && 'Aucune session en cours'}
               {filter === 'all' && 'Aucun coaché'}
             </h3>
             <p className="text-it2p-text-secondary mb-4">

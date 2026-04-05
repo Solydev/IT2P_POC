@@ -7,51 +7,31 @@ const currentPlan = {
   daysLeft: 18,
 }
 
-const plans = [
-  {
-    id: 'starter',
-    name: 'Starter',
-    price: '29',
-    period: 'mois',
-    description: 'Pour les praticiens indépendants',
-    highlight: false,
-    features: [
-      { label: 'Sessions illimitées', included: true },
-      { label: "Jusqu\u2019\u00e0 50 coach\u00e9s actifs", included: true },
-      { label: 'Exportation PDF des bilans', included: true },
-      { label: 'Textes descriptifs des profils', included: true },
-      { label: 'Bilans collectifs', included: false },
-      { label: 'Personnalisation de marque', included: false },
-      { label: 'Support prioritaire', included: false },
-    ],
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    price: '79',
-    period: 'mois',
-    description: 'Pour les cabinets et équipes RH',
-    highlight: true,
-    features: [
-      { label: 'Sessions illimitées', included: true },
-      { label: 'Coachés illimités', included: true },
-      { label: 'Exportation PDF des bilans', included: true },
-      { label: 'Textes descriptifs des profils', included: true },
-      { label: 'Bilans collectifs', included: true },
-      { label: 'Personnalisation de marque', included: true },
-      { label: 'Support prioritaire', included: true },
-    ],
-  },
-]
+const plan = {
+  id: 'ia2p',
+  name: 'Accès IT2P',
+  price: '15',
+  period: 'mois',
+  description: 'Réservé aux praticiens certifiés Institut IA2P',
+  features: [
+    { label: 'Sessions illimitées' },
+    { label: 'Coachés illimités' },
+    { label: 'Exportation PDF des bilans' },
+    { label: 'Textes descriptifs des 62 profils' },
+    { label: 'Bilans collectifs' },
+    { label: 'Personnalisation de marque' },
+    { label: 'Support Institut IA2P' },
+  ],
+}
 
 const invoices = [
-  { date: '01/03/2026', amount: '29,00 €', status: 'Payée', plan: 'Starter' },
-  { date: '01/02/2026', amount: '29,00 €', status: 'Payée', plan: 'Starter' },
+  { date: '01/03/2026', amount: '15,00 €', status: 'Payée', plan: 'Accès IT2P' },
+  { date: '01/02/2026', amount: '15,00 €', status: 'Payée', plan: 'Accès IT2P' },
   { date: '01/01/2026', amount: '0,00 €', status: 'Gratuit', plan: 'Essai' },
 ]
 
 export default function SubscriptionPage() {
-  const usedPct = Math.round((currentPlan.sessionsUsed / currentPlan.sessionsMax) * 100)
+  const usedPct = currentPlan.sessionsUsed * 10 // demo display only
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -86,7 +66,7 @@ export default function SubscriptionPage() {
                 Sessions utilisées
               </p>
               <p className="text-sm font-medium text-it2p-text mb-2">
-                {currentPlan.sessionsUsed} / {currentPlan.sessionsMax}
+                {currentPlan.sessionsUsed} sessions
               </p>
               <div className="w-full sm:w-48 h-2 bg-it2p-sand/40 rounded-full overflow-hidden">
                 <div
@@ -98,62 +78,37 @@ export default function SubscriptionPage() {
           </div>
         </div>
 
-        {/* Pricing cards */}
+        {/* Pricing card */}
         <h2 className="text-lg font-serif font-semibold text-it2p-text mb-4">
-          Choisir un plan
+          Votre abonnement
         </h2>
-        <div className="grid sm:grid-cols-2 gap-6 mb-10">
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`relative bg-it2p-surface rounded-lg p-6 shadow-sm border transition-shadow hover:shadow-md ${
-                plan.highlight
-                  ? 'border-it2p-accent ring-2 ring-it2p-accent/20'
-                  : 'border-it2p-sand/30'
-              }`}
-            >
-              {plan.highlight && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-it2p-accent text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  Recommandé
-                </span>
-              )}
-              <div className="mb-4">
-                <h3 className="text-lg font-serif font-bold text-it2p-text">{plan.name}</h3>
-                <p className="text-sm text-it2p-text-secondary">{plan.description}</p>
-              </div>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-it2p-text">{plan.price} €</span>
-                <span className="text-it2p-text-secondary text-sm"> / {plan.period}</span>
-              </div>
-              <ul className="space-y-2.5 mb-6">
-                {plan.features.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm">
-                    {f.included ? (
-                      <svg className="w-4 h-4 text-it2p-success flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4 text-it2p-sand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    )}
-                    <span className={f.included ? 'text-it2p-text' : 'text-it2p-text-secondary line-through'}>
-                      {f.label}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                className={`w-full py-2.5 rounded-lg font-medium text-sm transition-colors ${
-                  plan.highlight
-                    ? 'bg-it2p-accent text-white hover:bg-it2p-accent-hover'
-                    : 'bg-it2p-surface border border-it2p-sand/50 text-it2p-text hover:bg-it2p-sand-light'
-                }`}
-              >
-                {plan.highlight ? 'Passer au Pro' : 'Choisir Starter'}
-              </button>
+        <div className="max-w-sm mb-10">
+          <div className="relative bg-it2p-surface rounded-lg p-6 shadow-sm border border-it2p-accent ring-2 ring-it2p-accent/20">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-it2p-accent text-white text-xs font-semibold px-3 py-1 rounded-full">
+              Praticiens certifiés IA2P
+            </span>
+            <div className="mb-4">
+              <h3 className="text-lg font-serif font-bold text-it2p-text">{plan.name}</h3>
+              <p className="text-sm text-it2p-text-secondary">{plan.description}</p>
             </div>
-          ))}
+            <div className="mb-6">
+              <span className="text-4xl font-bold text-it2p-text">{plan.price} €</span>
+              <span className="text-it2p-text-secondary text-sm"> / {plan.period}</span>
+            </div>
+            <ul className="space-y-2.5 mb-6">
+              {plan.features.map((f, i) => (
+                <li key={i} className="flex items-center gap-2 text-sm">
+                  <svg className="w-4 h-4 text-it2p-success flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-it2p-text">{f.label}</span>
+                </li>
+              ))}
+            </ul>
+            <button className="w-full py-2.5 rounded-lg font-medium text-sm bg-it2p-accent text-white hover:bg-it2p-accent-hover transition-colors">
+              S&apos;abonner
+            </button>
+          </div>
         </div>
 
         {/* Billing history */}

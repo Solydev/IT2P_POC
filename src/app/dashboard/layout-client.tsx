@@ -51,10 +51,10 @@ export default function DashboardLayoutClient({
           {/* Logo */}
           <div className="p-6 border-b border-it2p-sand/30">
             <h1 className="text-2xl font-serif font-bold text-it2p-accent">
-              IT2P
+              A2P
             </h1>
             <p className="text-xs text-it2p-text-secondary mt-1">
-              Inventaire du Travail en 2 Pôles
+              Analyse de la Personnalité Professionnelle
             </p>
           </div>
 
