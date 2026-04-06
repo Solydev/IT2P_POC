@@ -148,13 +148,12 @@ export default function SessionCreateModal({
         console.error('Failed to copy link:', clipboardError)
         showToast('Session créée !', 'success')
       }
-
-      // Notify parent component
-      onSessionCreated()
       
-      // Close the modal after a delay to show the link
+      // Close the modal and refresh the list after a delay to show the link
       setTimeout(() => {
         handleClose()
+        // Notify parent component after modal is closed
+        onSessionCreated()
       }, MODAL_CLOSE_DELAY_MS)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de la création')
