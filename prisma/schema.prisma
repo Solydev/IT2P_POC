@@ -33,21 +33,22 @@ model Person {
 }
 
 model Session {
-  id             String   @id @default(uuid())
-  token          String   @unique
-  practitionerId String
-  practitioner   Practitioner @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
-  personId       String
-  person         Person   @relation(fields: [personId], references: [id], onDelete: Restrict)
-  status         String   @default("PENDING") // PENDING | IN_PROGRESS | COMPLETED | EXPIRED
-  coacheeName    String?  // Deprecated: kept for backward compatibility
-  context        String
-  expiresAt      DateTime?
-  completedAt    DateTime?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  answers        Answer[]
-  result         Result?
+  id                 String   @id @default(uuid())
+  token              String   @unique
+  practitionerId     String
+  practitioner       Practitioner @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
+  personId           String
+  person             Person   @relation(fields: [personId], references: [id], onDelete: Restrict)
+  status             String   @default("PENDING") // PENDING | IN_PROGRESS | COMPLETED | EXPIRED
+  coacheeName        String?  // Deprecated: kept for backward compatibility
+  context            String
+  expirationDuration Int      @default(48) // Duration in hours
+  expiresAt          DateTime?
+  completedAt        DateTime?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  answers            Answer[]
+  result             Result?
 }
 
 model Answer {
