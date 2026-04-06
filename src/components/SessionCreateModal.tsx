@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useToast } from './ToastProvider'
+import { generateTestInvitationMailto } from '@/lib/mailtoHelper'
 
 const MODAL_CLOSE_DELAY_MS = 3000
 
@@ -34,6 +35,7 @@ export default function SessionCreateModal({
   const [newPersonLastName, setNewPersonLastName] = useState('')
   const [newPersonEmail, setNewPersonEmail] = useState('')
   const [createdSessionLink, setCreatedSessionLink] = useState<string | null>(null)
+  const [linkCopiedSuccessfully, setLinkCopiedSuccessfully] = useState(false)
   const { showToast } = useToast()
 
   // Fetch persons when modal opens
@@ -143,9 +145,11 @@ export default function SessionCreateModal({
       // Copy the link to clipboard
       try {
         await navigator.clipboard.writeText(data.testLink)
+        setLinkCopiedSuccessfully(true)
         showToast('Session créée ! Lien copié dans le presse-papiers', 'success')
       } catch (clipboardError) {
         console.error('Failed to copy link:', clipboardError)
+        setLinkCopiedSuccessfully(false)
         showToast('Session créée !', 'success')
       }
       
@@ -171,6 +175,7 @@ export default function SessionCreateModal({
     setNewPersonLastName('')
     setNewPersonEmail('')
     setCreatedSessionLink(null)
+    setLinkCopiedSuccessfully(false)
     onClose()
   }
 
@@ -195,7 +200,9 @@ export default function SessionCreateModal({
             </h2>
             
             <p className="text-sm text-a2p-text-secondary mb-4 text-center">
-              Votre lien de test a été généré et copié dans le presse-papiers.
+              {linkCopiedSuccessfully 
+                ? "Votre lien de test a été généré et copié dans le presse-papiers."
+                : "Votre lien de test a été généré."}
             </p>
 
             <div className="bg-gray-50 border border-a2p-sand/30 rounded-lg p-3 mb-4">
@@ -234,7 +241,7 @@ export default function SessionCreateModal({
               </a>
 
               <a
-                href={`mailto:?subject=Invitation%20%C3%A0%20passer%20le%20test%20A2P&body=Bonjour%2C%0A%0AJe%20vous%20invite%20%C3%A0%20passer%20le%20test%20A2P%20%28Analyse%20de%20la%20Personnalit%C3%A9%20Professionnelle%29.%0A%0AVoici%20votre%20lien%20personnalis%C3%A9%20%3A%0A${encodeURIComponent(createdSessionLink)}%0A%0ALe%20test%20prend%20environ%2010%20minutes.%0A%0ABien%20cordialement`}
+                href={generateTestInvitationMailto(createdSessionLink)}
                 className="w-full px-4 py-2.5 text-sm font-medium bg-white border border-a2p-accent text-a2p-accent rounded hover:bg-a2p-accent/5 transition-colors flex items-center justify-center gap-2"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">

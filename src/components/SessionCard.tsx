@@ -6,6 +6,7 @@ import StatusBadge from './StatusBadge'
 import CopyLinkButton from './CopyLinkButton'
 import SessionEditModal from './SessionEditModal'
 import { getAppUrl } from '@/lib/config'
+import { generateTestInvitationMailto } from '@/lib/mailtoHelper'
 
 interface SessionCardProps {
   session: {
@@ -156,7 +157,7 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
                 Ouvrir
               </a>
               <a
-                href={`mailto:?subject=Invitation%20%C3%A0%20passer%20le%20test%20A2P&body=Bonjour%2C%0A%0AJe%20vous%20invite%20%C3%A0%20passer%20le%20test%20A2P%20%28Analyse%20de%20la%20Personnalit%C3%A9%20Professionnelle%29.%0A%0AVoici%20votre%20lien%20personnalis%C3%A9%20%3A%0A${encodeURIComponent(testLink)}%0A%0ALe%20test%20prend%20environ%2010%20minutes.%0A%0ABien%20cordialement`}
+                href={generateTestInvitationMailto(testLink)}
                 className="px-3 py-1.5 text-sm font-medium bg-white border border-a2p-accent text-a2p-accent rounded hover:bg-a2p-accent/5 transition-colors flex items-center gap-1.5"
                 title="Envoyer par email"
               >
