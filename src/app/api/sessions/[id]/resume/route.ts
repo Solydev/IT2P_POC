@@ -67,7 +67,8 @@ export async function PATCH(
     const now = new Date()
     const isExpired = existingSession.expiresAt && existingSession.expiresAt < now
 
-    if (!isExpired && existingSession.status !== 'EXPIRED') {
+    // Session must be expired (either by status or by date) to be resumed
+    if (existingSession.status !== 'EXPIRED' && !isExpired) {
       return NextResponse.json(
         { error: 'La session n\'est pas expirée' },
         { status: 400 }

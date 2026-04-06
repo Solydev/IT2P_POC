@@ -82,7 +82,6 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
       const response = await fetch(`/api/sessions/${session.id}/extend`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
       })
 
       if (!response.ok) {
@@ -105,7 +104,6 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
       const response = await fetch(`/api/sessions/${session.id}/resume`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
       })
 
       if (!response.ok) {

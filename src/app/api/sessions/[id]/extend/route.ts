@@ -64,8 +64,14 @@ export async function PATCH(
     }
 
     // Parse request body for optional new duration
-    const body = await request.json()
-    const { additionalHours } = body
+    let additionalHours: number | undefined
+    try {
+      const body = await request.json()
+      additionalHours = body.additionalHours
+    } catch {
+      // Body is empty or invalid, which is fine - we'll use default behavior
+      additionalHours = undefined
+    }
 
     // Calculate new expiration date
     // If additionalHours is provided, add to current expiration
