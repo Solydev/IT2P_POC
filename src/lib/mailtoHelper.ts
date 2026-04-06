@@ -10,7 +10,7 @@ export function generateTestInvitationMailto(testLink: string): string {
   const body = encodeURIComponent(
     `╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║                       A 2 P                                   ║
+║                        A2P                                    ║
 ║       Analyse de la Personnalité Professionnelle             ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
@@ -18,12 +18,9 @@ export function generateTestInvitationMailto(testLink: string): string {
 
 Bonjour,
 
-Je vous invite à passer le test A2P (Analyse de la Personnalité 
-Professionnelle).
+Je vous invite à passer le test A2P (Analyse de la Personnalité Professionnelle).
 
-Ce test vous permettra d'obtenir une analyse détaillée de votre 
-personnalité professionnelle et de mieux comprendre vos forces 
-et vos axes de développement.
+Ce test vous permettra d'obtenir une analyse détaillée de votre personnalité professionnelle et de mieux comprendre vos forces et vos axes de développement.
 
 
 ┌─────────────────────────────────────────────────────────────┐
