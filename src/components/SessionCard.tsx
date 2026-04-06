@@ -38,6 +38,8 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [isExtending, setIsExtending] = useState(false)
+  const [isResuming, setIsResuming] = useState(false)
   const appUrl = getAppUrl()
   const testLink = `${appUrl}/test/${session.token}`
   
@@ -71,6 +73,52 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
     } finally {
       setIsDeleting(false)
       setShowDeleteConfirm(false)
+    }
+  }
+
+  const handleExtend = async () => {
+    setIsExtending(true)
+    try {
+      const response = await fetch(`/api/sessions/${session.id}/extend`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Erreur lors de la prolongation')
+      }
+
+      onSessionUpdated?.()
+    } catch (error) {
+      console.error('Error extending session:', error)
+      alert(error instanceof Error ? error.message : 'Erreur lors de la prolongation')
+    } finally {
+      setIsExtending(false)
+    }
+  }
+
+  const handleResume = async () => {
+    setIsResuming(true)
+    try {
+      const response = await fetch(`/api/sessions/${session.id}/resume`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Erreur lors de la reprise')
+      }
+
+      onSessionUpdated?.()
+    } catch (error) {
+      console.error('Error resuming session:', error)
+      alert(error instanceof Error ? error.message : 'Erreur lors de la reprise')
+    } finally {
+      setIsResuming(false)
     }
   }
 
@@ -166,6 +214,43 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
                 </svg>
                 Envoyer
               </a>
+              <button
+                onClick={handleExtend}
+                disabled={isExtending}
+                className="px-3 py-1.5 text-sm font-medium bg-white border border-a2p-sand text-a2p-text rounded hover:bg-gray-50 transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                title="Prolonger la session"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {isExtending ? 'Prolongation...' : 'Prolonger'}
+              </button>
+            </>
+          )}
+          {session.status === 'EXPIRED' && (
+            <>
+              <button
+                onClick={handleResume}
+                disabled={isResuming}
+                className="px-3 py-1.5 text-sm font-medium bg-a2p-accent text-white rounded hover:bg-a2p-accent-hover transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                title="Reprendre la session expirée"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                </svg>
+                {isResuming ? 'Reprise...' : 'Reprendre'}
+              </button>
+              <button
+                onClick={handleExtend}
+                disabled={isExtending}
+                className="px-3 py-1.5 text-sm font-medium bg-white border border-a2p-sand text-a2p-text rounded hover:bg-gray-50 transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                title="Prolonger la session sans la reprendre"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {isExtending ? 'Prolongation...' : 'Prolonger'}
+              </button>
             </>
           )}
           {session.status === 'COMPLETED' && session.result && (

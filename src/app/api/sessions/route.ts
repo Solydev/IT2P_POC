@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 import { v4 as uuidv4 } from 'uuid'
+import { calculateExpirationDate, DEFAULT_EXPIRATION_DURATION } from '@/lib/expirationOptions'
 
 /**
  * GET /api/sessions
@@ -93,7 +94,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json()
-    const { personId, context } = body
+    const { personId, context, expirationDuration } = body
 
     // Validate required fields
     if (!personId) {
@@ -129,12 +130,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Generate unique token and set expiration to 48h from now
+    // Generate unique token and set expiration based on chosen duration
     const token = uuidv4()
-    const expiresAt = new Date()
-    expiresAt.setHours(expiresAt.getHours() + 48)
+    const durationHours = expirationDuration || DEFAULT_EXPIRATION_DURATION
+    const expiresAt = calculateExpirationDate(durationHours)
 
-    // Create session with personId and context
+    // Create session with personId, context, and expiration duration
     const newSession = await prisma.session.create({
       data: {
         token,
@@ -142,6 +143,7 @@ export async function POST(request: NextRequest) {
         personId: personId,
         status: 'PENDING',
         context: context.trim(),
+        expirationDuration: durationHours,
         expiresAt,
       },
       include: {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useToast } from './ToastProvider'
 import { generateTestInvitationMailto } from '@/lib/mailtoHelper'
+import { EXPIRATION_OPTIONS, DEFAULT_EXPIRATION_DURATION } from '@/lib/expirationOptions'
 
 const MODAL_CLOSE_DELAY_MS = 3000
 
@@ -26,6 +27,7 @@ export default function SessionCreateModal({
 }: SessionCreateModalProps) {
   const [personId, setPersonId] = useState('')
   const [context, setContext] = useState('')
+  const [expirationDuration, setExpirationDuration] = useState(DEFAULT_EXPIRATION_DURATION)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [persons, setPersons] = useState<Person[]>([])
@@ -130,7 +132,7 @@ export default function SessionCreateModal({
       const response = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personId, context }),
+        body: JSON.stringify({ personId, context, expirationDuration }),
       })
 
       const data = await response.json()
@@ -169,6 +171,7 @@ export default function SessionCreateModal({
   const handleClose = () => {
     setPersonId('')
     setContext('')
+    setExpirationDuration(DEFAULT_EXPIRATION_DURATION)
     setError('')
     setShowNewPersonForm(false)
     setNewPersonFirstName('')
@@ -387,6 +390,27 @@ export default function SessionCreateModal({
                 placeholder="Ex: Recrutement, Accompagnement managérial"
                 required
               />
+            </div>
+
+            <div>
+              <label htmlFor="expirationDuration" className="block text-sm font-medium text-a2p-text mb-1">
+                Durée de validité
+              </label>
+              <select
+                id="expirationDuration"
+                value={expirationDuration}
+                onChange={(e) => setExpirationDuration(Number(e.target.value))}
+                className="w-full px-3 py-2 border border-a2p-sand/50 rounded focus:outline-none focus:ring-2 focus:ring-a2p-accent"
+              >
+                {EXPIRATION_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-a2p-text-secondary mt-1">
+                Le test sera accessible pendant cette durée
+              </p>
             </div>
 
             {error && (
