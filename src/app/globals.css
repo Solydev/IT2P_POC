@@ -5,23 +5,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --color-bg: #FAFAF7;
+  --color-bg: #F5F7FA;
   --color-surface: #FFFFFF;
-  --color-sand: #D4C5A9;
-  --color-sand-light: #F5EBD8;
-  --color-text: #2D2A26;
-  --color-text-secondary: #6B6560;
-  --color-accent: #2E5A88;
-  --color-accent-hover: #1D4A75;
-  --color-coming-soon: #C8C4BE;
-  --color-success: #4A7C59;
-  --color-warning: #B8860B;
-  --color-error: #A04040;
+  --color-sand: #DDE2EA;
+  --color-sand-light: #EEF1F6;
+  --color-text: #1C2333;
+  --color-text-secondary: #64748B;
+  --color-accent: #2558A8;
+  --color-accent-hover: #1A4690;
+  --color-coming-soon: #A8B4C4;
+  --color-success: #2E7D4F;
+  --color-warning: #C97A0A;
+  --color-error: #B03040;
   --color-info: #4A6FA5;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: 'Source Sans 3', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Better focus rings */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Subtle card shadow utility */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+}
+.card-shadow-md {
+  box-shadow: 0 4px 12px 0 rgb(0 0 0 / 0.08), 0 1px 3px -1px rgb(0 0 0 / 0.04);
 }

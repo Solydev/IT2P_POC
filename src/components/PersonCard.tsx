@@ -113,11 +113,19 @@ export default function PersonCard({
                 className="mt-1 w-4 h-4 text-a2p-accent border-a2p-sand rounded focus:ring-a2p-accent"
               />
             )}
+            {/* Avatar */}
+            <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${
+              person.isActive
+                ? 'bg-a2p-accent/10 text-a2p-accent'
+                : 'bg-a2p-sand-light text-a2p-text-secondary'
+            }`}>
+              {person.firstName[0]}{person.lastName[0]}
+            </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-a2p-text mb-1">
+              <h3 className="text-base font-semibold text-a2p-text mb-0.5">
                 {person.firstName} {person.lastName}
                 {!person.isActive && (
-                  <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-a2p-coming-soon/20 text-a2p-text-secondary border border-a2p-coming-soon/30">
+                  <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-a2p-coming-soon/20 text-a2p-text-secondary border border-a2p-coming-soon/30">
                     Désactivé
                   </span>
                 )}
@@ -127,11 +135,8 @@ export default function PersonCard({
                   {person.email}
                 </p>
               )}
-              <p className="text-sm text-a2p-text-secondary">
-                Créé le {formatDate(person.createdAt)}
-              </p>
-              <p className="text-sm text-a2p-text-secondary">
-                {person._count?.sessions || 0} session(s)
+              <p className="text-xs text-a2p-text-secondary">
+                Créé le {formatDate(person.createdAt)} · {person._count?.sessions || 0} session(s)
               </p>
             </div>
           </div>
