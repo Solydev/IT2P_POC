@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useToast } from './ToastProvider'
 
-const MODAL_CLOSE_DELAY_MS = 500
+const MODAL_CLOSE_DELAY_MS = 3000
 
 interface Person {
   id: string
@@ -33,6 +33,7 @@ export default function SessionCreateModal({
   const [newPersonFirstName, setNewPersonFirstName] = useState('')
   const [newPersonLastName, setNewPersonLastName] = useState('')
   const [newPersonEmail, setNewPersonEmail] = useState('')
+  const [createdSessionLink, setCreatedSessionLink] = useState<string | null>(null)
   const { showToast } = useToast()
 
   // Fetch persons when modal opens
@@ -136,19 +137,22 @@ export default function SessionCreateModal({
         throw new Error(data.error || 'Erreur lors de la création')
       }
 
+      // Store the link to display in success state
+      setCreatedSessionLink(data.testLink)
+
       // Copy the link to clipboard
       try {
         await navigator.clipboard.writeText(data.testLink)
         showToast('Session créée ! Lien copié dans le presse-papiers', 'success')
       } catch (clipboardError) {
         console.error('Failed to copy link:', clipboardError)
-        showToast('Session créée ! Impossible de copier le lien automatiquement', 'info')
+        showToast('Session créée !', 'success')
       }
 
       // Notify parent component
       onSessionCreated()
       
-      // Close the modal after a short delay to allow the user to see the success message
+      // Close the modal after a delay to show the link
       setTimeout(() => {
         handleClose()
       }, MODAL_CLOSE_DELAY_MS)
@@ -167,10 +171,88 @@ export default function SessionCreateModal({
     setNewPersonFirstName('')
     setNewPersonLastName('')
     setNewPersonEmail('')
+    setCreatedSessionLink(null)
     onClose()
   }
 
   if (!isOpen) return null
+
+  // Success state: Show created link with sharing options
+  if (createdSessionLink) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="bg-a2p-surface rounded-lg shadow-xl max-w-md w-full">
+          <div className="p-6">
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-a2p-success rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="white" className="w-8 h-8">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-serif font-bold text-a2p-text mb-2 text-center">
+              Session créée avec succès !
+            </h2>
+            
+            <p className="text-sm text-a2p-text-secondary mb-4 text-center">
+              Votre lien de test a été généré et copié dans le presse-papiers.
+            </p>
+
+            <div className="bg-gray-50 border border-a2p-sand/30 rounded-lg p-3 mb-4">
+              <p className="text-xs text-a2p-text-secondary mb-2 font-medium">Lien du test :</p>
+              <p className="text-sm text-a2p-text break-all font-mono">{createdSessionLink}</p>
+            </div>
+
+            <div className="space-y-2">
+              <button
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(createdSessionLink)
+                    showToast('Lien copié !', 'success')
+                  } catch (error) {
+                    console.error('Failed to copy:', error)
+                  }
+                }}
+                className="w-full px-4 py-2.5 text-sm font-medium bg-a2p-accent text-white rounded hover:bg-a2p-accent-hover transition-colors flex items-center justify-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                </svg>
+                Copier à nouveau
+              </button>
+
+              <a
+                href={createdSessionLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full px-4 py-2.5 text-sm font-medium bg-white border border-a2p-accent text-a2p-accent rounded hover:bg-a2p-accent/5 transition-colors flex items-center justify-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+                Ouvrir le test
+              </a>
+
+              <a
+                href={`mailto:?subject=Invitation%20%C3%A0%20passer%20le%20test%20A2P&body=Bonjour%2C%0A%0AJe%20vous%20invite%20%C3%A0%20passer%20le%20test%20A2P%20%28Analyse%20de%20la%20Personnalit%C3%A9%20Professionnelle%29.%0A%0AVoici%20votre%20lien%20personnalis%C3%A9%20%3A%0A${encodeURIComponent(createdSessionLink)}%0A%0ALe%20test%20prend%20environ%2010%20minutes.%0A%0ABien%20cordialement`}
+                className="w-full px-4 py-2.5 text-sm font-medium bg-white border border-a2p-accent text-a2p-accent rounded hover:bg-a2p-accent/5 transition-colors flex items-center justify-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                Envoyer par email
+              </a>
+            </div>
+
+            <p className="text-xs text-a2p-text-secondary text-center mt-4">
+              Cette fenêtre se fermera automatiquement...
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
