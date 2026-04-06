@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'A2P — Institut IA2P',
+  title: 'A2P - Institut IA2P',
   description: 'Analyse de la Personnalité Professionnelle',
 }
 

@@ -6,6 +6,7 @@ import StatusBadge from './StatusBadge'
 import CopyLinkButton from './CopyLinkButton'
 import SessionEditModal from './SessionEditModal'
 import { getAppUrl } from '@/lib/config'
+import { generateTestInvitationMailto } from '@/lib/mailtoHelper'
 
 interface SessionCardProps {
   session: {
@@ -141,7 +142,31 @@ export default function SessionCard({ session, onSessionUpdated, onSessionDelete
 
         <div className="flex gap-2 flex-wrap">
           {(session.status === 'PENDING' || session.status === 'IN_PROGRESS') && (
-            <CopyLinkButton link={testLink} />
+            <>
+              <CopyLinkButton link={testLink} />
+              <a
+                href={testLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 text-sm font-medium bg-white border border-a2p-accent text-a2p-accent rounded hover:bg-a2p-accent/5 transition-colors flex items-center gap-1.5"
+                title="Ouvrir le test dans un nouvel onglet"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+                Ouvrir
+              </a>
+              <a
+                href={generateTestInvitationMailto(testLink)}
+                className="px-3 py-1.5 text-sm font-medium bg-white border border-a2p-accent text-a2p-accent rounded hover:bg-a2p-accent/5 transition-colors flex items-center gap-1.5"
+                title="Envoyer par email"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                Envoyer
+              </a>
+            </>
           )}
           {session.status === 'COMPLETED' && session.result && (
             <Link
